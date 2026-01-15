@@ -19,6 +19,7 @@ import xml.etree.ElementTree as ET
 # Import AST parser for dynamic API discovery
 from src.context.ast_parser import ASTParser
 from src.models import ErrorCategory, FixAttempt, ClassContext, FunctionContext, CodeLocation
+from src.maven_utils import get_maven_cmd, build_test_cmd, build_compile_cmd, FAST_FLAGS
 
 
 @dataclass
@@ -69,7 +70,8 @@ class JavaReActLoop:
         test_classes: list[str] = None,
         max_iterations: int = 3,
         verbose: bool = True,
-        model: str = "anthropic/claude-3.5-haiku"
+        model: str = "anthropic/claude-3.5-haiku",
+        project_context=None  # Shared ProjectContext from agent
     ):
         self.project_path = Path(project_path)
         self.api_key = api_key
@@ -77,8 +79,9 @@ class JavaReActLoop:
         self.max_iterations = max_iterations
         self.verbose = verbose
         self.model = model
+        self.project_context = project_context  # Shared context from agent
 
-        # Dynamic API discovery cache
+        # Dynamic API discovery cache (fallback if no shared context)
         self._discovered_classes: dict[str, ClassContext] = {}
 
         # Self-reflection: track fix attempts per test
@@ -96,16 +99,23 @@ class JavaReActLoop:
         """
         results = []
 
-        # Step 0: Discover project APIs dynamically (no hardcoding!)
-        self._discover_project_apis()
+        # Step 0a: Clean up stale Surefire reports to avoid using cached results
+        self._cleanup_surefire_reports()
 
-        # Show discovered classes summary
-        if self._discovered_classes:
-            for cls_name in list(self._discovered_classes.keys())[:5]:
-                cls = self._discovered_classes[cls_name]
-                self._log(f"    - {cls_name}: {len(cls.constructors)} ctors, {len(cls.methods)} methods")
-            if len(self._discovered_classes) > 5:
-                self._log(f"    ... and {len(self._discovered_classes) - 5} more classes")
+        # Step 0b: Use shared project context if available, else discover APIs
+        if self.project_context and self.project_context.is_built:
+            self._log(f"  Using shared project context ({len(self.project_context.get_all_classes())} classes)")
+        else:
+            # Fallback: Discover project APIs dynamically
+            self._discover_project_apis()
+
+            # Show discovered classes summary
+            if self._discovered_classes:
+                for cls_name in list(self._discovered_classes.keys())[:5]:
+                    cls = self._discovered_classes[cls_name]
+                    self._log(f"    - {cls_name}: {len(cls.constructors)} ctors, {len(cls.methods)} methods")
+                if len(self._discovered_classes) > 5:
+                    self._log(f"    ... and {len(self._discovered_classes) - 5} more classes")
 
         # Step 1: Fix any compilation errors first
         compiles, error_msg = self._verify_compilation()
@@ -128,7 +138,7 @@ class JavaReActLoop:
 
             self._log(f"Results: {passed}/{total} passed, {failed} failed, {errors} errors")
 
-            if failed == 0 and errors == 0:
+            if total > 0 and failed == 0 and errors == 0:
                 self._log("\n[SUCCESS] All tests passing!")
                 results.append(JavaReactResult(
                     iteration=iteration,
@@ -141,6 +151,51 @@ class JavaReActLoop:
                     success=True
                 ))
                 break
+
+            # Handle compilation failure (total=0 means no tests ran)
+            if total == 0:
+                # Track compilation fix attempts to prevent infinite loop
+                if not hasattr(self, '_compile_fix_attempts'):
+                    self._compile_fix_attempts = 0
+                self._compile_fix_attempts += 1
+                MAX_COMPILE_FIXES = 5
+
+                if self._compile_fix_attempts > MAX_COMPILE_FIXES:
+                    self._log(f"\n[STOP] Exceeded max compilation fix attempts ({MAX_COMPILE_FIXES})")
+                    results.append(JavaReactResult(
+                        iteration=iteration,
+                        total_tests=0,
+                        passed_tests=0,
+                        failed_tests=0,
+                        error_tests=0,
+                        failures=[],
+                        fixed_in_this_iteration=0,
+                        success=False
+                    ))
+                    break
+
+                self._log(f"\n[COMPILE ERROR] Tests didn't run (attempt {self._compile_fix_attempts}/{MAX_COMPILE_FIXES}), attempting to fix...")
+                compiles, error_msg = self._verify_compilation()
+                if not compiles:
+                    compile_fixes = self._fix_compilation_errors(error_msg)
+                    self._log(f"  Applied {compile_fixes} compilation fixes")
+                    if compile_fixes == 0:
+                        self._log("  [STOP] Could not fix compilation errors")
+                        results.append(JavaReactResult(
+                            iteration=iteration,
+                            total_tests=0,
+                            passed_tests=0,
+                            failed_tests=0,
+                            error_tests=0,
+                            failures=[],
+                            fixed_in_this_iteration=0,
+                            success=False
+                        ))
+                        break
+                else:
+                    # Compilation passed but still no tests - something else is wrong
+                    self._log("  [WARNING] Compilation passed but no tests executed")
+                continue  # Retry with hopefully fixed code
 
             # Step 4: Reason about failures WITH CATEGORIZATION
             self._log(f"\n[REASON] Analyzing {len(failures)} failures with error categorization...")
@@ -179,15 +234,10 @@ class JavaReActLoop:
         return results
 
     def _run_maven_tests(self) -> tuple[str, int]:
-        """Run Maven tests and capture output."""
-        # Build test filter if specific classes provided
-        test_filter = ""
-        if self.test_classes:
-            test_filter = f"-Dtest={','.join(self.test_classes)}"
-
-        cmd = ["./mvnw", "test", "-q"]
-        if test_filter:
-            cmd.append(test_filter)
+        """Run Maven tests and capture output (with speed optimizations)."""
+        # Build command with optimizations
+        test_class = ','.join(self.test_classes) if self.test_classes else None
+        cmd = build_test_cmd(self.project_path, test_class=test_class, quiet=True, fast=True)
 
         self._log(f"  Command: {' '.join(cmd)}")
 
@@ -196,7 +246,7 @@ class JavaReActLoop:
             cwd=self.project_path,
             capture_output=True,
             text=True,
-            timeout=120
+            timeout=180  # Increased timeout with optimizations
         )
 
         return result.stdout + result.stderr, result.returncode
@@ -408,6 +458,36 @@ class JavaReActLoop:
             return {}
 
     # =========================================================================
+    # CLEANUP
+    # =========================================================================
+
+    def _cleanup_surefire_reports(self) -> None:
+        """
+        Clean up stale Surefire reports before running tests.
+
+        This prevents the ReAct loop from using cached results from previous runs.
+        """
+        surefire_dir = self.project_path / "target" / "surefire-reports"
+        if not surefire_dir.exists():
+            return
+
+        # If specific test classes are provided, only clean those reports
+        if self.test_classes:
+            for test_class in self.test_classes:
+                for report in surefire_dir.glob(f"*{test_class}*.xml"):
+                    try:
+                        report.unlink()
+                    except Exception:
+                        pass
+        else:
+            # Clean all Surefire reports
+            for report in surefire_dir.glob("*.xml"):
+                try:
+                    report.unlink()
+                except Exception:
+                    pass
+
+    # =========================================================================
     # DYNAMIC API DISCOVERY (replaces hardcoded class lists)
     # =========================================================================
 
@@ -454,6 +534,18 @@ class JavaReActLoop:
         2. Include that class's APIs (constructors + methods)
         3. Include related classes (via inheritance, method parameters/returns)
         """
+        # Use shared project context if available
+        if self.project_context and self.project_context.is_built:
+            # Extract target class name from test class
+            short_name = test_class.split(".")[-1]
+            target_class = short_name
+            for suffix in ["Test", "Tests", "IT", "IntegrationTest"]:
+                if target_class.endswith(suffix):
+                    target_class = target_class[:-len(suffix)]
+                    break
+            return self.project_context.build_api_context_for_class(target_class)
+
+        # Fallback to discovered classes
         if not self._discovered_classes:
             return "// No API information discovered"
 
@@ -731,9 +823,41 @@ FIX STRATEGY FOR TYPE MISMATCH:
 
             ErrorCategory.COMPILATION_ERROR: """
 FIX STRATEGY FOR COMPILATION ERROR:
-1. Look for syntax errors (missing semicolons, braces, etc.)
-2. Check for undefined variables
-3. Verify method calls match signatures in DISCOVERED API SIGNATURES
+
+CRITICAL JAVA SYNTAX RULES:
+1. NEVER put semicolons inside method call parentheses!
+   WRONG:  instance.setType(PetType pt = new PetType(); pt.setName("Dog");)
+   RIGHT:  PetType pt = new PetType();
+           pt.setName("Dog");
+           instance.setType(pt);
+
+2. NEVER put variable declarations inside method calls!
+   WRONG:  instance.addPet(Pet pet = new Pet())
+   RIGHT:  Pet pet = new Pet();
+           instance.addPet(pet);
+
+3. NEVER use class name as method name!
+   WRONG:  instance.Owner(...)
+   RIGHT:  instance.addPet(...) or instance.getAddress()
+
+4. Each statement must end with semicolon on its own line
+5. Method calls take only values/variables, not declarations
+
+CORRECT PATTERN FOR OBJECT SETUP:
+```java
+// Create object
+Pet pet = new Pet();
+// Configure it
+pet.setName("Fluffy");
+pet.setId(1);
+// Then pass to method
+owner.addPet(pet);
+```
+
+Check for:
+- Undefined variables - declare them first
+- Wrong method names - check DISCOVERED API SIGNATURES
+- Missing imports
 """,
 
             ErrorCategory.UNKNOWN: """
@@ -962,6 +1086,13 @@ Attempt {attempt.iteration}:
         # Get reflection from previous attempts
         reflection = self._build_reflection_section(test_key)
 
+        # Detect class under test and instance variable
+        short_name = failure.test_class.split(".")[-1]
+        class_under_test = short_name.replace("Test", "")
+        instance_var = "instance"
+        if any(suffix in class_under_test for suffix in ["Controller", "Service", "Formatter", "Repository"]):
+            instance_var = "controller"
+
         return f"""You are fixing a failing JUnit 5 test.
 
 DISCOVERED API SIGNATURES (use ONLY these - extracted from actual source code):
@@ -986,6 +1117,12 @@ CRITICAL RULES:
 3. Check DISCOVERED API SIGNATURES before using any constructor or method
 4. Only use classes that are already imported in the test file
 5. Keep it simple - avoid complex date/time operations
+
+CRITICAL - DO NOT CHANGE METHOD CALL TARGETS:
+- The class being tested is {class_under_test}
+- Methods belong to {class_under_test}, call them on '{instance_var}', NOT on parameter objects
+- CORRECT: {instance_var}.methodName(param1, param2)
+- WRONG:   param1.methodName(...)  // param1 is a PARAMETER, not the class under test!
 
 Return ONLY the corrected @Test method (must be complete and compilable):
 ```java
@@ -1055,23 +1192,18 @@ Return ONLY the corrected @Test method (must be complete and compilable):
         return self._build_api_context_for_test(test_class)
 
     def _verify_compilation(self) -> tuple[bool, str]:
-        """Verify tests compile after fix."""
-        # First apply Spring formatting
-        subprocess.run(
-            ["./mvnw", "spring-javaformat:apply", "-q"],
-            cwd=self.project_path,
-            capture_output=True,
-            text=True,
-            timeout=60
-        )
+        """Verify tests compile after fix (with speed optimizations)."""
+        # Skip Spring formatting during iteration - do it once at the end
+        # This saves 3-5s per compilation
 
-        # Then try to compile
+        # Compile with optimizations
+        cmd = build_compile_cmd(self.project_path, quiet=True, fast=True)
         result = subprocess.run(
-            ["./mvnw", "test-compile", "-q"],
+            cmd,
             cwd=self.project_path,
             capture_output=True,
             text=True,
-            timeout=60
+            timeout=120
         )
         return result.returncode == 0, result.stdout + result.stderr
 
@@ -1116,6 +1248,12 @@ Return ONLY the corrected @Test method (must be complete and compilable):
             # Ask LLM to fix the entire file
             error_summary = "\n".join([f"Line {e['line']}: {e['error']}" for e in errors])
 
+            # Detect the class being tested and the instance variable name
+            instance_var = "instance"
+            class_under_test = test_class_name.replace("Test", "")
+            if "Controller" in class_under_test or "Service" in class_under_test or "Formatter" in class_under_test:
+                instance_var = "controller"
+
             prompt = f"""Fix the compilation errors in this Java test file.
 
 DISCOVERED API SIGNATURES (use ONLY these - extracted from actual source code):
@@ -1135,6 +1273,13 @@ CRITICAL RULES:
 3. Use setters after construction: Foo foo = new Foo(); foo.setBar(value);
 4. Match method signatures exactly - check parameter types and counts
 5. Use null (not None), true/false (not True/False)
+
+CRITICAL - DO NOT CHANGE METHOD CALL TARGETS:
+- Methods being tested belong to the class under test ({class_under_test})
+- Always call methods on the test instance variable '{instance_var}', NOT on parameter objects
+- CORRECT: {instance_var}.print(petType, locale)    // Call on the formatter being tested
+- WRONG:   petType.print(...)                       // petType is a PARAMETER, not the class!
+- If you see "{instance_var}.methodName(...)", keep it that way - only fix the arguments if needed
 
 Return the COMPLETE fixed Java file:
 ```java
@@ -1406,13 +1551,14 @@ Return ONLY the corrected @Test method with the issue fixed:
                 if error_msg:
                     self._log(f"    Compile error: {error_msg[:300]}")
                 else:
-                    # Try to get stdout too
+                    # Try to get stdout too (with optimizations)
+                    cmd = build_compile_cmd(self.project_path, quiet=False, fast=True)
                     result = subprocess.run(
-                        ["./mvnw", "test-compile"],
+                        cmd,
                         cwd=self.project_path,
                         capture_output=True,
                         text=True,
-                        timeout=60
+                        timeout=120
                     )
                     error_msg = (result.stdout + result.stderr)[-300:]
                     self._log(f"    Compile output: {error_msg}")
@@ -1456,8 +1602,9 @@ Return ONLY the corrected @Test method with the issue fixed:
             return False
 
     def _call_llm_for_fix(self, prompt: str) -> Optional[str]:
-        """Call LLM to get a fix for a failing test."""
+        """Call LLM to get a fix for a failing test with retry."""
         import requests
+        import time
 
         headers = {
             "Authorization": f"Bearer {self.api_key}",
@@ -1472,16 +1619,39 @@ Return ONLY the corrected @Test method with the issue fixed:
             ]
         }
 
-        response = requests.post(
-            "https://openrouter.ai/api/v1/chat/completions",
-            headers=headers,
-            json=payload,
-            timeout=30
-        )
+        # Retry with exponential backoff
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                response = requests.post(
+                    "https://openrouter.ai/api/v1/chat/completions",
+                    headers=headers,
+                    json=payload,
+                    timeout=30
+                )
 
-        if response.status_code != 200:
-            self._log(f"    LLM API error: {response.status_code}")
-            return None
+                if response.status_code == 200:
+                    break
+
+                # Retry on rate limit or server errors
+                if response.status_code in (429, 502, 503, 504):
+                    if attempt < max_retries - 1:
+                        wait_time = 2 ** attempt
+                        self._log(f"    API error {response.status_code}, retrying in {wait_time}s...")
+                        time.sleep(wait_time)
+                        continue
+
+                self._log(f"    LLM API error: {response.status_code}")
+                return None
+
+            except (requests.Timeout, requests.ConnectionError) as e:
+                if attempt < max_retries - 1:
+                    wait_time = 2 ** attempt
+                    self._log(f"    API error {e}, retrying in {wait_time}s...")
+                    time.sleep(wait_time)
+                    continue
+                self._log(f"    LLM API failed after retries: {e}")
+                return None
 
         result = response.json()
         content = result["choices"][0]["message"]["content"]

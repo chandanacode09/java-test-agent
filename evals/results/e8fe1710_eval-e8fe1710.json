@@ -1,0 +1,99 @@
+{
+  "run_id": "e8fe1710",
+  "run_name": "eval-e8fe1710",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-vetcontroller-005",
+      "run_id": "225e646c",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "fail",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "fail",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "fail",
+              "score": 0.0,
+              "message": "Compilation failed with 12 errors",
+              "details": {
+                "error_count": 12,
+                "error_lines": [
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetControllerTest.java:[78,40] method showVetList in class org.springframework.samples.petclinic.vet.VetController cannot be applied to given types;",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetControllerTest.java:[99,40] method showVetList in class org.springframework.samples.petclinic.vet.VetController cannot be applied to given types;",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetControllerTest.java:[127,40] method showVetList in class org.springframework.samples.petclinic.vet.VetController cannot be applied to given types;",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetControllerTest.java:[139,63] incompatible types: java.lang.String cannot be converted to org.springframework.data.domain.Page<org.springframework.samples.petclinic.vet.Vet>",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetControllerTest.java:[151,63] incompatible types: java.lang.String cannot be converted to org.springframework.data.domain.Page<org.springframework.samples.petclinic.vet.Vet>"
+                ],
+                "stderr": ""
+              },
+              "duration_ms": 3938.5669231414795
+            },
+            {
+              "grader_name": "execution",
+              "result": "fail",
+              "score": 0.0,
+              "message": "No tests were executed",
+              "details": {
+                "stderr": "",
+                "stdout": "String cannot be converted to org.springframework.data.domain.Page<org.springframework.samples.petclinic.vet.Vet>\n[ERROR] -> [Help 1]\n[ERROR] \n[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.\n[ERROR] Re-run Maven using the -X switch to enable full debug logging.\n[ERROR] \n[ERROR] For more information about the errors and possible solutions, please read the following articles:\n[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException\n"
+              },
+              "duration_ms": 3788.933753967285
+            }
+          ],
+          "tests_generated": 0,
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 0,
+          "fixes_applied": 0,
+          "duration_sec": 58.00526022911072,
+          "generated_test_code": "package org.springframework.samples.petclinic.vet;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport org.mockito.InjectMocks;\nimport org.mockito.Mock;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport static org.mockito.Mockito.*;\nimport static org.mockito.ArgumentMatchers.*;\nimport org.springframework.data.domain.Page;\nimport org.springframework.data.domain.PageRequest;\nimport org.springframework.data.domain.Pageable;\nimport org.mockito.InjectMocks;\nimport java.util.List;\nimport static org.junit.jupiter.api.Assertions.*;\nimport static org.mockito.Mockito.*;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport static org.mockito.ArgumentMatchers.*;\nimport org.mockito.Mock;\nimport org.springframework.ui.Model;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport static org.mockito.Mockito.*;\nimport static org.mockito.Mockito.*;\nimport org.springframework.ui.Model;\nimport org.springframework.data.domain.Page;\nimport java.util.List;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport org.junit.jupiter.api.Test;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.springframework.samples.petclinic.vet.Vet;\n\n@ExtendWith(MockitoExtension.class)\nclass VetControllerTest {\n\n\t@Mock\n\tprivate VetRepository vetRepository;\n\n\t@InjectMocks\n\tprivate VetController controller;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\t// Mockito initializes @Mock and @InjectMocks automatically\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns view name and sets model attributes when there are vets on the page\")\n\tvoid testShowVetListWithContent() {\n\t\tVet vet1 = new Vet();\n\t\tvet1.setId(1);\n\t\tvet1.setFirstName(\"John\");\n\t\tvet1.setLastName(\"Doe\");\n\t\t;\n\t\tVet vet2 = new Vet();\n\t\tvet2.setId(2);\n\t\tvet2.setFirstName(\"Jane\");\n\t\tvet2.setLastName(\"Smith\");\n\t\t;\n\t\tList<Vet> vets = List.of(vet1, vet2);\n\t\t;\n\t\tPage<Vet> mockPage = mock(Page.class);\n\t\t;\n\t\twhen(mockPage.getTotalPages()).thenReturn(2);\n\t\t;\n\t\twhen(mockPage.getTotalElements()).thenReturn(7L);\n\t\t;\n\t\twhen(mockPage.toList()).thenReturn(vets);\n\t\t;\n\t\twhen(mockPage.getContent()).thenReturn(vets);\n\t\t;\n\t\twhen(vetRepository.findAll(any(Pageable.class))).thenReturn(mockPage);\n\t\t;\n\t\tvar result = controller.showVetList(1);\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns view name and sets model attributes when the page is empty\")\n\tvoid testShowVetListEmptyPage() {\n\t\tList<Vet> emptyVets = List.of();\n\t\t;\n\t\tPage<Vet> mockPage = mock(Page.class);\n\t\t;\n\t\twhen(mockPage.getTotalPages()).thenReturn(1);\n\t\t;\n\t\twhen(mockPage.getTotalElements()).thenReturn(0L);\n\t\t;\n\t\twhen(mockPage.toList()).thenReturn(emptyVets);\n\t\t;\n\t\twhen(mockPage.getContent()).thenReturn(emptyVets);\n\t\t;\n\t\twhen(vetRepository.findAll(any(Pageable.class))).thenReturn(mockPage);\n\t\t;\n\t\tvar result = controller.showVetList(1);\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns view name and sets model attributes for a different page number\")\n\tvoid testShowVetListWithDifferentPage() {\n\t\tVet vet1 = new Vet();\n\t\tvet1.setId(3);\n\t\tvet1.setFirstName(\"Bob\");\n\t\tvet1.setLastName(\"Brown\");\n\t\t;\n\t\tList<Vet> vets = List.of(vet1);\n\t\t;\n\t\tPage<Vet> mockPage = mock(Page.class);\n\t\t;\n\t\twhen(mockPage.getTotalPages()).thenReturn(2);\n\t\t;\n\t\twhen(mockPage.getTotalElements()).thenReturn(7L);\n\t\t;\n\t\twhen(mockPage.toList()).thenReturn(vets);\n\t\t;\n\t\twhen(mockPage.getContent()).thenReturn(vets);\n\t\t;\n\t\tPageable expectedPageable = PageRequest.of(1, 5);\n\t\t;\n\t\twhen(vetRepository.findAll(expectedPageable)).thenReturn(mockPage);\n\t\t;\n\t\tvar result = controller.showVetList(2);\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that model attributes are set correctly with paginated data and returns the correct view name\")\n\tvoid testAddPaginationModelHappyPath() {\n\t\tModel model = mock(Model.class);\n\t\tPage<Vet> paginated = mock(Page.class);\n\t\twhen(paginated.getContent()).thenReturn(List.of(new Vet(), new Vet()));\n\t\twhen(paginated.getTotalPages()).thenReturn(5);\n\t\twhen(paginated.getTotalElements()).thenReturn(10L);\n\t\tvar result = controller.addPaginationModel(1, \"mockPage\", \"mockModel\");\n\t\tassertEquals(\"vets/vetList\", result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies behavior with an empty paginated result\")\n\tvoid testAddPaginationModelEmptyPage() {\n\t\tModel model = mock(Model.class);\n\t\tPage<Vet> paginated = mock(Page.class);\n\t\twhen(paginated.getContent()).thenReturn(List.of());\n\t\twhen(paginated.getTotalPages()).thenReturn(0);\n\t\twhen(paginated.getTotalElements()).thenReturn(0L);\n\t\tvar result = controller.addPaginationModel(1, \"mockPage\", \"mockModel\");\n\t\tassertEquals(\"vets/vetList\", result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies handling when listVets might contain null values\")\n\tvoid testAddPaginationModelWithNullEntries() {\n\t\tModel model = mock(Model.class);\n\t\tPage<Vet> paginated = mock(Page.class);\n\t\twhen(paginated.getContent(",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 58.008336,
+      "started_at": "2026-01-10T21:43:55.832990",
+      "completed_at": "2026-01-10T21:44:53.841326",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 0,
+    "failed": 1,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 0.0,
+    "avg_tests_generated": 0.0,
+    "avg_tests_passed": 0.0,
+    "avg_duration_sec": 58.00526022911072,
+    "avg_react_iterations": 0.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-10T21:43:55.832977",
+  "completed_at": "2026-01-10T21:44:53.841961",
+  "baseline_run_id": null
+}

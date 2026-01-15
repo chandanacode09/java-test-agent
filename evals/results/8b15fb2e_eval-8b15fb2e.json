@@ -1,0 +1,99 @@
+{
+  "run_id": "8b15fb2e",
+  "run_name": "eval-8b15fb2e",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-vet-001",
+      "run_id": "5506398c",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "fail",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "fail",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "fail",
+              "score": 0.0,
+              "message": "Compilation failed with 8 errors",
+              "details": {
+                "error_count": 8,
+                "error_lines": [
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetTest.java:[15,51] cannot find symbol",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetTest.java:[17,51] cannot find symbol",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetTest.java:[47,39] cannot find symbol",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetTest.java:[150,39] incompatible types: java.lang.String cannot be converted to org.springframework.samples.petclinic.vet.Specialty",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetTest.java:[15,51] cannot find symbol"
+                ],
+                "stderr": ""
+              },
+              "duration_ms": 26154.53290939331
+            },
+            {
+              "grader_name": "execution",
+              "result": "fail",
+              "score": 0.0,
+              "message": "No tests were executed",
+              "details": {
+                "stderr": "",
+                "stdout": "] incompatible types: java.lang.String cannot be converted to org.springframework.samples.petclinic.vet.Specialty\n[ERROR] -> [Help 1]\n[ERROR] \n[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.\n[ERROR] Re-run Maven using the -X switch to enable full debug logging.\n[ERROR] \n[ERROR] For more information about the errors and possible solutions, please read the following articles:\n[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException\n"
+              },
+              "duration_ms": 18268.553018569946
+            }
+          ],
+          "tests_generated": 0,
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 1,
+          "fixes_applied": 0,
+          "duration_sec": 255.4119758605957,
+          "generated_test_code": "package org.springframework.samples.petclinic.vet;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport java.util.Comparator;\nimport java.util.List;\nimport java.util.stream.Collectors;\nimport static org.junit.jupiter.api.Assertions.*;\nimport java.util.Set;\nimport org.junit.jupiter.api.Test;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.springframework.samples.petclinic.model.Specialty;\nimport org.junit.jupiter.api.Test;\nimport org.springframework.samples.petclinic.model.Vet;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.springframework.samples.petclinic.vet.Specialty;\nimport org.junit.jupiter.api.Test;\nimport org.springframework.samples.petclinic.vet.Vet;\nimport static org.junit.jupiter.api.Assertions.assertEquals;\n\nclass VetTest {\n\n\tprivate Vet instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new Vet();\n\t}\n\n\t@Test\n\t@DisplayName(\"Calling getSpecialtiesInternal on a new Vet instance returns a non-null empty Set\")\n\tvoid testGetSpecialtiesInternalReturnsEmptySetForNewVet() {\n\t\tvar result = instance.getSpecialtiesInternal();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"After adding a Specialty to a Vet, getSpecialtiesInternal returns a Set containing that Specialty\")\n\tvoid testGetSpecialtiesInternalReturnsSetAfterAddingSpecialty() {\n\t\tSpecialty specialty = new Specialty();\n\t\tspecialty.setName(\"Cardiology\");\n\t\tVet vet = new Vet();\n\t\tvet.addSpecialty(specialty);\n\t\tvar result = specialty.getSpecialtiesInternal();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns a list of specialties sorted alphabetically by name when vet has multiple specialties\")\n\tvoid testGetSpecialtiesReturnsSortedList() {\n\t\tVet vet = new Vet();\n\t\tSpecialty cardio = new Specialty();\n\t\tcardio.setName(\"Cardiology\");\n\t\tvet.addSpecialty(cardio);\n\t\tSpecialty surgery = new Specialty();\n\t\tsurgery.setName(\"Surgery\");\n\t\tvet.addSpecialty(surgery);\n\t\tvar result = vet.getSpecialties();\n\t\tassertEquals(List.of(cardio, surgery), result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns an empty list when vet has no specialties\")\n\tvoid testGetSpecialtiesReturnsEmptyList() {\n\t\tVet vet = new Vet();\n\t\tvar result = instance.getSpecialties();\n\t\tassertEquals(List.of(), result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns a list with one specialty when vet has a single specialty\")\n\tvoid testGetSpecialtiesReturnsSingleSpecialty() {\n\t\tVet vet = new Vet();\n\t\tSpecialty s = new Specialty();\n\t\ts.setName(\"Dentistry\");\n\t\tvet.addSpecialty(s);\n\t\tvar result = vet.getSpecialties();\n\t\tassertEquals(List.of(s), result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Throws NullPointerException when a specialty has a null name due to sorting comparison\")\n\tvoid testGetSpecialtiesThrowsNullPointerForNullName() {\n\t\tVet vet = new Vet();\n\t\tSpecialty s1 = new Specialty();\n\t\ts1.setName(\"A\");\n\t\tvet.addSpecialty(s1);\n\t\tSpecialty s2 = new Specialty();\n\t\ts2.setName(null);\n\t\tvet.addSpecialty(s2);\n\t\tassertThrows(NullPointerException.class, () -> {\n\t\t\tvet.getSpecialties();\n\t\t});\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getNrOfSpecialties returns the correct count when vet has multiple specialties\")\n\tvoid testGetNrOfSpecialtiesWithTwoSpecialties() {\n\t\tVet vet = new Vet();\n\t\tSpecialty specialty1 = new Specialty();\n\t\tspecialty1.setName(\"Cardiology\");\n\t\tSpecialty specialty2 = new Specialty();\n\t\tspecialty2.setName(\"Surgery\");\n\t\tvet.addSpecialty(specialty1);\n\t\tvet.addSpecialty(specialty2);\n\t\tvar result = vet.getNrOfSpecialties();\n\t\tassertEquals(2, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getNrOfSpecialties returns 0 when vet has no specialties\")\n\tvoid testGetNrOfSpecialtiesWithZeroSpecialties() {\n\t\tVet vet = new Vet();\n\t\tvar result = instance.getNrOfSpecialties();\n\t\tassertEquals(0, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Tests boundary case with exactly one specialty\")\n\tvoid testGetNrOfSpecialtiesWithOneSpecialty() {\n\t\tVet vet = new Vet();\n\t\tSpecialty specialty = new Specialty();\n\t\tspecialty.setName(\"Dentistry\");\n\t\tvet.addSpecialty(specialty);\n\t\tvar result = vet.getNrOfSpecialties();\n\t\tassertEquals(1, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies behavior when adding the same specialty multiple times, assuming set prevents duplicates\")\n\tvoid testGetNrOfSpecialtiesAfterAddingDuplicate() {\n\t\tVet vet = new Vet();\n\t\tSpecialty specialty = new Specialty();\n\t\tspecialty.setName(\"Radiology\");\n\t\tvet.addSpecialty(specialty);\n\t\tvet.addSpecialty(specialty);\n\t\tvar result = vet.getNrOfSpecialties();\n\t\tassertEquals(1, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that adding a valid Specialty object increases the number of specialties for the vet\")\n\tvoid testAddSpecialtyAddsToInternalSet() {\n\t\tSpecialty specialty = new Specialty();\n\t\tVet vet = new Vet();\n\t\tint initialCount = vet.getNrOfSpecialties();\n\t\tinstance.addSpecialty(\"specialty\");\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that passing null as specialty throws NullPointerException\")\n\tvoid testAddSpecialtyThrowsWhenSpec",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 255.41903,
+      "started_at": "2026-01-11T14:01:20.777027",
+      "completed_at": "2026-01-11T14:05:36.196057",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 0,
+    "failed": 1,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 0.0,
+    "avg_tests_generated": 0.0,
+    "avg_tests_passed": 0.0,
+    "avg_duration_sec": 255.4119758605957,
+    "avg_react_iterations": 1.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-11T14:01:20.777005",
+  "completed_at": "2026-01-11T14:05:36.196523",
+  "baseline_run_id": null
+}

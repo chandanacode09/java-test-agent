@@ -1,0 +1,69 @@
+{
+  "run_id": "c08614bf",
+  "run_name": "eval-c08614bf",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-vet-001",
+      "run_id": "ee7edf6e",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "pass",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "pass",
+          "grader_outputs": [],
+          "tests_generated": 8,
+          "tests_passed": 8,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 2,
+          "fixes_applied": 0,
+          "duration_sec": 46.38559007644653,
+          "generated_test_code": "package org.springframework.samples.petclinic.vet;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.DisplayName;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport org.mockito.InjectMocks;\nimport org.mockito.Mock;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport static org.junit.jupiter.api.Assertions.*;\nimport static org.mockito.Mockito.*;\nimport static org.mockito.ArgumentMatchers.*;\nimport java.util.*;\nimport org.mockito.Mockito;\nimport org.springframework.data.domain.Page;\nimport org.springframework.data.domain.PageImpl;\nimport org.springframework.data.domain.PageRequest;\nimport org.springframework.data.domain.Pageable;\nimport org.springframework.ui.Model;\nimport org.springframework.web.bind.WebDataBinder;\nimport org.springframework.web.servlet.mvc.support.RedirectAttributes;\nimport org.springframework.validation.BindingResult;\n\n@ExtendWith(MockitoExtension.class)\nclass VetTest {\n\n    @InjectMocks\n    private Vet controller;\n\n    @Test\n    @DisplayName(\"should return new HashSet when specialties is null\")\n    void getSpecialtiesInternal_null_specialties() {\n        Vet controller = new Vet();\n\n        var result = controller.getSpecialtiesInternal();\n\n        assertEquals(0, result.size());\n    }\n\n    @Test\n    @DisplayName(\"should return the existing set when specialties is set\")\n    void getSpecialtiesInternal_with_specialties() {\n        Vet controller = new Vet();\n        Specialty specialty = new Specialty();\n        specialty.setName(\"cardiology\");\n        controller.addSpecialty(specialty);\n\n        var result = controller.getSpecialtiesInternal();\n\n        assertEquals(1, result.size());\n    }\n\n    @Test\n    @DisplayName(\"should return empty list when no specialties\")\n    void getSpecialties_empty() {\n        Vet controller = new Vet();\n\n        var result = controller.getSpecialties();\n\n        assertEquals(0, result.size());\n    }\n\n    @Test\n    @DisplayName(\"should return sorted list by name when specialties exist\")\n    void getSpecialties_with_specialties_sorted() {\n        Vet controller = new Vet();\n        Specialty s1 = new Specialty();\n        s1.setName(\"b\");\n        Specialty s2 = new Specialty();\n        s2.setName(\"a\");\n        controller.addSpecialty(s1);\n        controller.addSpecialty(s2);\n\n        var result = controller.getSpecialties();\n\n        assertEquals(2, result.size());\n        assertEquals(\"a\", result.get(0).getName());\n        assertEquals(\"b\", result.get(1).getName());\n    }\n\n    @Test\n    @DisplayName(\"should return 0 when no specialties\")\n    void getNrOfSpecialties_zero() {\n        Vet controller = new Vet();\n\n        var result = controller.getNrOfSpecialties();\n\n        assertEquals(0, result);\n    }\n\n    @Test\n    @DisplayName(\"should return count when specialties exist\")\n    void getNrOfSpecialties_with_specialties() {\n        Vet controller = new Vet();\n        Specialty s1 = new Specialty();\n        s1.setName(\"cardiology\");\n        Specialty s2 = new Specialty();\n        s2.setName(\"surgery\");\n        controller.addSpecialty(s1);\n        controller.addSpecialty(s2);\n\n        var result = controller.getNrOfSpecialties();\n\n        assertEquals(2, result);\n    }\n\n    @Test\n    @DisplayName(\"should add specialty to the set\")\n    void addSpecialty_new_specialty() {\n        Vet controller = new Vet();\n        Specialty specialty = new Specialty();\n        specialty.setName(\"surgery\");\n\n        controller.addSpecialty(specialty);\n\n        assertEquals(1, controller.getNrOfSpecialties());\n    }\n\n    @Test\n    @DisplayName(\"should not add duplicate specialty\")\n    void addSpecialty_duplicate_specialty() {\n        Vet controller = new Vet();\n        Specialty specialty = new Specialty();\n        specialty.setName(\"surgery\");\n        controller.addSpecialty(specialty);\n\n        controller.addSpecialty(specialty);\n\n        assertEquals(1, controller.getNrOfSpecialties());\n    }\n\n}",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 1,
+        "pass_rate": 1.0,
+        "pass_at_1": 1.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 46.387058,
+      "started_at": "2026-01-13T21:05:21.139221",
+      "completed_at": "2026-01-13T21:06:07.526279",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 1,
+    "failed": 0,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 1.0,
+    "avg_tests_generated": 8.0,
+    "avg_tests_passed": 8.0,
+    "avg_duration_sec": 46.38559007644653,
+    "avg_react_iterations": 2.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-13T21:05:21.139201",
+  "completed_at": "2026-01-13T21:06:07.526337",
+  "baseline_run_id": null
+}

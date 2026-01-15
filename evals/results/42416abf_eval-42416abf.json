@@ -1,0 +1,69 @@
+{
+  "run_id": "42416abf",
+  "run_name": "eval-42416abf",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-pet-003",
+      "run_id": "a656bc17",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "error",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "error",
+          "grader_outputs": [],
+          "tests_generated": 0,
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 0,
+          "fixes_applied": 0,
+          "duration_sec": 70.0720489025116,
+          "generated_test_code": null,
+          "maven_output": null,
+          "error_log": "Traceback (most recent call last):\n  File \"/Users/chandana/AI-Agents/java-test-agent/evals/levels/l3_agent.py\", line 84, in evaluate\n    result = agent.run(case.target_class)\n  File \"/Users/chandana/AI-Agents/java-test-agent/src/java_agent.py\", line 119, in run\n    specs = self.spec_generator.generate_for_class(target_class)\n  File \"/Users/chandana/AI-Agents/java-test-agent/src/generator/spec_generator.py\", line 156, in generate_for_class\n    spec = self.generate_for_function(method, patterns)\n  File \"/Users/chandana/AI-Agents/java-test-agent/src/generator/spec_generator.py\", line 108, in generate_for_function\n    spec_dict = self._parse_json_response(response, language, param_count)\n  File \"/Users/chandana/AI-Agents/java-test-agent/src/generator/spec_generator.py\", line 285, in _parse_json_response\n    data, validation_errors = self._validate_and_fix_json(data, language)\n                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^\n  File \"/Users/chandana/AI-Agents/java-test-agent/src/generator/spec_generator.py\", line 523, in _validate_and_fix_json\n    fixed_tc, tc_errors = self._validate_and_fix_test_case(tc, i)\n                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^\n  File \"/Users/chandana/AI-Agents/java-test-agent/src/generator/spec_generator.py\", line 553, in _validate_and_fix_test_case\n    tc['expected'] = self._fix_expected_values(tc['expected'])\n                     ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^\n  File \"/Users/chandana/AI-Agents/java-test-agent/src/generator/spec_generator.py\", line 567, in _fix_expected_values\n    for key, value in expected.items():\n                      ^^^^^^^^^^^^^^\nAttributeError: 'str' object has no attribute 'items'\n"
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 70.073104,
+      "started_at": "2026-01-10T16:01:57.865204",
+      "completed_at": "2026-01-10T16:03:07.938308",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 0,
+    "failed": 0,
+    "errors": 1,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 0.0,
+    "avg_tests_generated": 0.0,
+    "avg_tests_passed": 0.0,
+    "avg_duration_sec": 70.0720489025116,
+    "avg_react_iterations": 0.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-10T16:01:57.865194",
+  "completed_at": "2026-01-10T16:03:07.938393",
+  "baseline_run_id": null
+}

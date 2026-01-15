@@ -5,10 +5,12 @@ Uses structured output to ensure valid JSON that matches our schema.
 Supports both Anthropic API and OpenRouter API.
 """
 
+import hashlib
 import json
 import os
 import re
 import requests
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 from ..models import (
@@ -17,6 +19,41 @@ from ..models import (
     ReturnSemantics
 )
 from .prompts import TestPromptBuilder
+
+
+# Simple LLM response cache
+_LLM_CACHE: dict[str, str] = {}
+_CACHE_DIR = Path(__file__).parent.parent.parent / ".llm_cache"
+
+
+def _get_cache_key(prompt: str, model: str) -> str:
+    """Generate cache key from prompt and model."""
+    content = f"{model}:{prompt}"
+    return hashlib.md5(content.encode()).hexdigest()
+
+
+def _load_cache():
+    """Load cache from disk."""
+    global _LLM_CACHE
+    if _CACHE_DIR.exists():
+        for f in _CACHE_DIR.glob("*.json"):
+            try:
+                data = json.loads(f.read_text())
+                _LLM_CACHE[f.stem] = data["response"]
+            except:
+                pass
+
+
+def _save_to_cache(key: str, response: str):
+    """Save response to cache."""
+    _CACHE_DIR.mkdir(exist_ok=True)
+    cache_file = _CACHE_DIR / f"{key}.json"
+    cache_file.write_text(json.dumps({"response": response}))
+    _LLM_CACHE[key] = response
+
+
+# Load cache on module import
+_load_cache()
 
 
 class SpecGenerator:
@@ -81,7 +118,8 @@ class SpecGenerator:
         self,
         func: FunctionContext,
         patterns: ProjectTestPatterns | None = None,
-        max_retries: int = 2
+        max_retries: int = 2,
+        api_context: str | None = None
     ) -> TestSpec:
         """
         Generate test specification for a function.
@@ -90,11 +128,12 @@ class SpecGenerator:
             func: The function context to generate tests for
             patterns: Optional project patterns for context
             max_retries: Number of retries on validation failure
+            api_context: Optional API context string for the target class
 
         Returns:
             TestSpec object ready for template rendering
         """
-        prompt = TestPromptBuilder.build_function_prompt(func, patterns)
+        prompt = TestPromptBuilder.build_function_prompt(func, patterns, api_context)
 
         # Detect language from file path
         language = self._detect_language(str(func.location.file_path))
@@ -106,7 +145,7 @@ class SpecGenerator:
             try:
                 response = self._call_llm(prompt, language)
                 spec_dict = self._parse_json_response(response, language, param_count)
-                spec = self._dict_to_test_spec(spec_dict)
+                spec = self._dict_to_test_spec(spec_dict, language)
 
                 # Ensure semantic fields from FunctionContext override LLM response
                 # (FunctionContext detection is more reliable)
@@ -147,16 +186,187 @@ class SpecGenerator:
     def generate_for_class(
         self,
         cls: ClassContext,
-        patterns: ProjectTestPatterns | None = None
+        project_context=None,
+        patterns: ProjectTestPatterns | None = None,
+        batch_mode: bool = True
     ) -> list[TestSpec]:
-        """Generate test specifications for all methods in a class."""
-        specs = []
+        """Generate test specifications for all methods in a class.
 
+        Args:
+            cls: The class context
+            project_context: Optional ProjectContext for API information
+            patterns: Optional test patterns from the project
+            batch_mode: If True, generate all specs in ONE LLM call (faster)
+        """
+        # Build API context string from project context
+        api_context = None
+        if project_context is not None:
+            api_context = project_context.build_api_context_for_class(cls.name)
+
+        # Batch mode disabled - LLM produces invalid JSON too often
+        # if batch_mode and len(cls.methods) > 1:
+        #     return self._generate_batch_specs(cls, patterns)
+
+        # Parallel per-method generation for faster execution
+        # (prevents timeout on controllers with 4+ methods)
+        if len(cls.methods) > 1:
+            return self._generate_parallel_specs(cls.methods, patterns, api_context)
+
+        # Single method - no parallelization needed
+        specs = []
         for method in cls.methods:
-            spec = self.generate_for_function(method, patterns)
+            spec = self.generate_for_function(method, patterns, api_context=api_context)
             specs.append(spec)
+        return specs
+
+    def _generate_parallel_specs(
+        self,
+        methods: list,
+        patterns: ProjectTestPatterns | None,
+        api_context: str | None
+    ) -> list[TestSpec]:
+        """Generate specs for multiple methods in parallel using ThreadPoolExecutor.
+
+        This prevents timeouts on classes with many methods (like VisitController with 4 methods).
+        Sequential: 4 methods × 15-30s = 60-120s (timeout)
+        Parallel:   15-30s total (4x speedup)
+        """
+        specs = []
+        method_to_spec = {}
+
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            # Submit all method specs in parallel
+            futures = {
+                executor.submit(
+                    self.generate_for_function,
+                    method,
+                    patterns,
+                    api_context=api_context
+                ): method
+                for method in methods
+            }
+
+            # Collect results as they complete with timeout
+            try:
+                for future in as_completed(futures, timeout=120):  # 2 min overall timeout
+                    method = futures[future]
+                    try:
+                        spec = future.result(timeout=60)  # 60s per method timeout
+                        method_to_spec[method.name] = spec
+                    except TimeoutError:
+                        print(f"  [TIMEOUT] Method {method.name} timed out, using fallback")
+                        method_to_spec[method.name] = self._create_fallback_spec(method, "Generation timed out")
+                    except Exception as e:
+                        print(f"  [ERROR] Failed to generate spec for {method.name}: {e}")
+                        method_to_spec[method.name] = self._create_fallback_spec(method, str(e))
+            except TimeoutError:
+                # Overall timeout - create fallback specs for remaining methods
+                print(f"  [TIMEOUT] Parallel generation timed out, creating fallbacks for remaining methods")
+                for future, method in futures.items():
+                    if method.name not in method_to_spec:
+                        method_to_spec[method.name] = self._create_fallback_spec(method, "Overall timeout")
+
+        # Preserve original method order
+        for method in methods:
+            if method.name in method_to_spec:
+                specs.append(method_to_spec[method.name])
 
         return specs
+
+    def _generate_batch_specs(
+        self,
+        cls: ClassContext,
+        patterns: ProjectTestPatterns | None = None
+    ) -> list[TestSpec]:
+        """Generate specs for ALL methods in one LLM call."""
+        language = self._detect_language(str(cls.methods[0].location.file_path))
+
+        # Build combined prompt for all methods
+        methods_info = []
+        for method in cls.methods:
+            methods_info.append(f"""
+METHOD: {method.name}
+```{language}
+{method.source_code}
+```
+Parameters: {', '.join(f'{p.name}: {p.type_hint or "unknown"}' for p in method.parameters)}
+Return type: {method.return_type or 'void'}
+""")
+
+        system_prompt = TestPromptBuilder.get_system_prompt(language)
+
+        prompt = f"""Generate test specifications for ALL methods in this {language.upper()} class.
+
+CLASS: {cls.name}
+FILE: {cls.location.file_path}
+
+{chr(10).join(methods_info)}
+
+Return a JSON array with one spec object per method. Each spec must have:
+- "target_name": the method name
+- "test_type": "unit_class"
+- "test_cases": array of test cases
+
+Output ONLY valid JSON array - no markdown, no explanations."""
+
+        try:
+            response = self._call_llm(f"{system_prompt}\n\n{prompt}", language)
+            specs_data = self._parse_batch_response(response, cls, language)
+            return [self._dict_to_test_spec(s, language) for s in specs_data]
+        except Exception as e:
+            print(f"  [WARN] Batch generation failed: {e}, falling back to per-method")
+            specs = []
+            for method in cls.methods:
+                spec = self.generate_for_function(method, patterns)
+                specs.append(spec)
+            return specs
+
+    def _parse_batch_response(self, response: str, cls: ClassContext, language: str) -> list[dict]:
+        """Parse batch response containing multiple specs."""
+        text = response.strip()
+
+        # Remove markdown code blocks
+        if text.startswith('```'):
+            lines = text.split('\n')
+            text = '\n'.join(lines[1:])  # Skip first line
+        if text.endswith('```'):
+            text = text[:-3]
+        text = text.strip()
+
+        data = json.loads(text)
+
+        # Handle various LLM response formats
+        if isinstance(data, dict):
+            if 'specs' in data:
+                data = data['specs']
+            elif 'test_cases' in data:
+                # Single spec returned as dict
+                data = [data]
+            else:
+                # Wrap single spec
+                data = [data]
+
+        # Ensure it's a list
+        if not isinstance(data, list):
+            data = [data]
+
+        # Fill in missing fields for each spec
+        for spec in data:
+            if not isinstance(spec, dict):
+                continue
+            spec['target_file'] = str(cls.location.file_path)
+            spec['target_class'] = cls.name
+            spec['language'] = language
+            if 'test_type' not in spec:
+                spec['test_type'] = 'unit_class'
+            # Ensure test_cases exists
+            if 'test_cases' not in spec:
+                spec['test_cases'] = []
+
+        # Filter out non-dict entries
+        data = [s for s in data if isinstance(s, dict)]
+
+        return data
 
     def generate_additional_tests(
         self,
@@ -197,12 +407,24 @@ class SpecGenerator:
 
         return code.strip()
 
-    def _call_llm(self, prompt: str, language: str = "python") -> str:
-        """Call the LLM API (supports Anthropic and OpenRouter)."""
+    def _call_llm(self, prompt: str, language: str = "python", use_cache: bool = True) -> str:
+        """Call the LLM API (supports Anthropic and OpenRouter) with caching."""
+        # Check cache first
+        cache_key = _get_cache_key(prompt, self.model)
+        if use_cache and cache_key in _LLM_CACHE:
+            return _LLM_CACHE[cache_key]
+
+        # Call LLM
         if self.provider == "openrouter":
-            return self._call_openrouter(prompt, language)
+            response = self._call_openrouter(prompt, language)
         else:
-            return self._call_anthropic(prompt, language)
+            response = self._call_anthropic(prompt, language)
+
+        # Cache response
+        if use_cache:
+            _save_to_cache(cache_key, response)
+
+        return response
 
     def _call_anthropic(self, prompt: str, language: str = "python") -> str:
         """Call Anthropic API directly."""
@@ -282,7 +504,7 @@ class SpecGenerator:
         data = self._sanitize_llm_output(data, language, param_count)
 
         # Validate and fix JSON structure (Option A)
-        data, validation_errors = self._validate_and_fix_json(data)
+        data, validation_errors = self._validate_and_fix_json(data, language)
 
         # Log validation errors for debugging (non-fatal)
         if validation_errors:
@@ -502,7 +724,7 @@ class SpecGenerator:
         'DebugFilesKeyError': 'from flask.debughelpers import DebugFilesKeyError',
     }
 
-    def _validate_and_fix_json(self, data: dict) -> tuple[dict, list[str]]:
+    def _validate_and_fix_json(self, data: dict, language: str = "python") -> tuple[dict, list[str]]:
         """
         Validate JSON structure and fix common issues.
 
@@ -525,8 +747,8 @@ class SpecGenerator:
                 errors.extend(tc_errors)
             data['test_cases'] = fixed_cases
 
-        # Auto-add missing imports based on usage
-        data = self._auto_add_imports(data)
+        # Auto-add missing imports based on usage (language-aware)
+        data = self._auto_add_imports(data, language)
 
         return data, errors
 
@@ -563,6 +785,12 @@ class SpecGenerator:
 
     def _fix_expected_values(self, expected: dict) -> dict:
         """Fix expected values for Python compatibility."""
+        # Handle case where LLM returns a string instead of dict
+        if isinstance(expected, str):
+            return {'returns': expected}
+        if not isinstance(expected, dict):
+            return {'returns': None}
+
         fixed = {}
         for key, value in expected.items():
             if key == 'returns':
@@ -622,25 +850,37 @@ class SpecGenerator:
 
         return value
 
-    def _auto_add_imports(self, data: dict) -> dict:
-        """Auto-add missing imports based on class usage in test cases."""
+    def _auto_add_imports(self, data: dict, language: str = "python") -> dict:
+        """Auto-add missing imports based on class usage in test cases (language-aware)."""
         imports = set(data.get('imports_needed', []))
 
-        # Always ensure Mock is imported if used
         all_values_str = json.dumps(data.get('test_cases', []))
-        if 'Mock(' in all_values_str or 'MagicMock(' in all_values_str:
-            imports.add('from unittest.mock import Mock, MagicMock, patch')
 
-        # Check for class names that need imports
-        for class_name, import_stmt in self.CLASS_IMPORTS.items():
-            if class_name in all_values_str:
-                imports.add(import_stmt)
+        if language == "java":
+            # Java: Use Mockito for mocking
+            if 'mock(' in all_values_str.lower():
+                imports.add('import static org.mockito.Mockito.*')
+            # Java doesn't use the CLASS_IMPORTS (those are Python-specific)
+        else:
+            # Python: Use unittest.mock
+            if 'Mock(' in all_values_str or 'MagicMock(' in all_values_str:
+                imports.add('from unittest.mock import Mock, MagicMock, patch')
+
+            # Check for class names that need imports (Python-specific frameworks)
+            for class_name, import_stmt in self.CLASS_IMPORTS.items():
+                if class_name in all_values_str:
+                    imports.add(import_stmt)
 
         data['imports_needed'] = list(imports)
         return data
 
-    def _dict_to_test_spec(self, data: dict) -> TestSpec:
-        """Convert a dictionary to a TestSpec object."""
+    def _dict_to_test_spec(self, data: dict, language: str = "python") -> TestSpec:
+        """Convert a dictionary to a TestSpec object.
+
+        Args:
+            data: The parsed LLM response dictionary
+            language: The detected language from file extension (used as fallback)
+        """
         # Map test type string to enum
         test_type_map = {
             'unit_pure': TestType.UNIT_PURE,
@@ -676,12 +916,15 @@ class SpecGenerator:
             ReturnSemantics.VALUE
         )
 
+        # Use language from LLM response if provided, otherwise use detected language
+        spec_language = Language(data.get('language', language))
+
         return TestSpec(
             test_type=test_type,
             target_file=data.get('target_file', ''),
             target_name=data.get('target_name', ''),
             target_class=data.get('target_class'),
-            language=Language(data.get('language', 'python')),
+            language=spec_language,
             test_cases=test_cases,
             fixtures_needed=data.get('fixtures_needed', []),
             imports_needed=data.get('imports_needed', []),
@@ -724,6 +967,8 @@ class SpecGenerator:
         # Parse mocks
         mocks = []
         for mock_data in data.get('mocks', []):
+            if mock_data is None:
+                continue  # Skip null mocks from LLM
             mocks.append(MockSpec(
                 target=mock_data.get('target', ''),
                 return_value=mock_data.get('return_value'),
@@ -779,12 +1024,16 @@ Please fix the JSON output and try again. Ensure:
 
     def _create_fallback_spec(self, func: FunctionContext, error: str) -> TestSpec:
         """Create a fallback spec when LLM generation fails."""
+        # Detect language from file extension
+        language_str = self._detect_language(str(func.location.file_path))
+        language = Language.JAVA if language_str == "java" else Language.PYTHON
+
         return TestSpec(
             test_type=TestType.CUSTOM,
             target_file=str(func.location.file_path),
             target_name=func.name,
             target_class=func.class_name,
-            language=Language.PYTHON,
+            language=language,
             test_cases=[
                 TestCase(
                     name=f"test_{func.name}_basic",
@@ -881,12 +1130,23 @@ class MockSpecGenerator:
         else:
             test_type = TestType.UNIT_PURE
 
+        # Detect language from file extension
+        file_path = str(func.location.file_path)
+        if file_path.endswith('.java'):
+            language = Language.JAVA
+        elif file_path.endswith('.ts') or file_path.endswith('.tsx'):
+            language = Language.TYPESCRIPT
+        elif file_path.endswith('.js') or file_path.endswith('.jsx'):
+            language = Language.JAVASCRIPT
+        else:
+            language = Language.PYTHON
+
         return TestSpec(
             test_type=test_type,
-            target_file=str(func.location.file_path),
+            target_file=file_path,
             target_name=func.name,
             target_class=func.class_name,
-            language=Language.PYTHON,
+            language=language,
             test_cases=test_cases,
             complexity_score=len(func.parameters) + len(func.calls)
         )

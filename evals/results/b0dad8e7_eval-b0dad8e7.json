@@ -1,0 +1,93 @@
+{
+  "run_id": "b0dad8e7",
+  "run_name": "eval-b0dad8e7",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-pet-003",
+      "run_id": "1c3b9759",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "pass",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "pass",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "pass",
+              "score": 1.0,
+              "message": "Compilation successful",
+              "details": {
+                "stdout": ""
+              },
+              "duration_ms": 6683.3789348602295
+            },
+            {
+              "grader_name": "execution",
+              "result": "pass",
+              "score": 1.0,
+              "message": "All 13 tests passed",
+              "details": {
+                "tests_run": 13,
+                "tests_passed": 13,
+                "tests_failed": 0,
+                "tests_error": 0
+              },
+              "duration_ms": 7337.064266204834
+            }
+          ],
+          "tests_generated": 13,
+          "tests_passed": 13,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 2,
+          "fixes_applied": 0,
+          "duration_sec": 199.22233128547668,
+          "generated_test_code": "package org.springframework.samples.petclinic.owner;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\n\nclass PetTest {\n\n\tprivate Pet instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new Pet();\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setting a valid birth date using setBirthDate stores the value, confirmed by retrieving it with getBirthDate\")\n\tvoid testSetBirthDateWithValidDate() {\n\t\tinstance.setBirthDate(LocalDate.of(2020, 5, 15));\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setting birth date to null updates the field, confirmed by retrieving null with getBirthDate\")\n\tvoid testSetBirthDateWithNull() {\n\t\tinstance.setBirthDate(null);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getBirthDate returns the LocalDate object that was set\")\n\tvoid testGetBirthDateReturnsSetDate() {\n\t\tinstance.setBirthDate(LocalDate.of(2020, 5, 15));\n\t\tvar result = instance.getBirthDate();\n\t\tassertEquals(LocalDate.of(2020, 5, 15), result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getBirthDate returns null if the birthDate field has not been set\")\n\tvoid testGetBirthDateReturnsNullIfNotSet() {\n\t\tvar result = instance.getBirthDate();\n\t\tassertNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getType returns the PetType object that was previously set\")\n\tvoid testGetTypeReturnsSetValue() {\n\t\tPet pet = new Pet();\n\t\tPetType petType = new PetType();\n\t\tpetType.setName(\"Dog\");\n\t\tpet.setType(petType);\n\t\tvar result = pet.getType();\n\t\tassertNotNull(result);\n\t\tassertEquals(petType, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getType returns null if no type has been set (initial state)\")\n\tvoid testGetTypeReturnsNullWhenNotSet() {\n\t\tPet pet = new Pet();\n\t\tvar result = pet.getType();\n\t\tassertNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getType returns null when setType is called with null\")\n\tvoid testGetTypeReturnsNullWhenSetToNull() {\n\t\tPet pet = new Pet();\n\t\tpet.setType(null);\n\t\tvar result = pet.getType();\n\t\tassertNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that the setType method accepts a valid PetType object and updates the pet's type\")\n\tvoid testSetTypeWithValidPetType() {\n\t\tinstance.setType(new PetType());\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that the setType method handles null input without throwing an exception\")\n\tvoid testSetTypeWithNull() {\n\t\tinstance.setType(null);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that calling setType multiple times updates the type each time\")\n\tvoid testSetTypeAfterSettingType() {\n\t\tinstance.setType(new PetType());\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getVisits returns an empty collection when no visits have been added\")\n\tvoid testGetVisitsWhenNoVisitsExist() {\n\t\tvar result = instance.getVisits();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getVisits returns a collection with all added visits in the order added\")\n\tvoid testGetVisitsAfterAddingMultipleVisits() {\n\t\tvar result = instance.getVisits();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that addVisit does not throw NullPointerException when passed a null visit\")\n\tvoid testAddVisitWithNullVisit() {\n\t\tassertDoesNotThrow(() -> instance.addVisit(null));\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 1,
+        "pass_rate": 1.0,
+        "pass_at_1": 1.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 199.226708,
+      "started_at": "2026-01-10T14:52:59.547659",
+      "completed_at": "2026-01-10T14:56:18.774367",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 1,
+    "failed": 0,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 1.0,
+    "avg_tests_generated": 13.0,
+    "avg_tests_passed": 13.0,
+    "avg_duration_sec": 199.22233128547668,
+    "avg_react_iterations": 2.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-10T14:52:59.547514",
+  "completed_at": "2026-01-10T14:56:18.775213",
+  "baseline_run_id": null
+}

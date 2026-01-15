@@ -303,6 +303,81 @@ WRONG - Never use Python syntax for Java:
 }
 
 # =============================================================================
+# IMPROVED JAVA PROMPT - EXPLICIT METHOD SIGNATURES
+# =============================================================================
+
+JAVA_METHOD_SIGNATURE_TEMPLATE = '''
+METHOD TO TEST:
+  Signature: {class_name}.{method_name}({params}) -> {return_type}
+
+  Full source:
+  ```java
+  {source_code}
+  ```
+'''
+
+JAVA_EXPLICIT_OUTPUT_EXAMPLE = '''
+═══════════════════════════════════════════════════════════════════════════════
+EXACT OUTPUT FORMAT REQUIRED - Follow this structure precisely:
+═══════════════════════════════════════════════════════════════════════════════
+
+For a method like: VetController.showVetList(int page, Model model) -> String
+
+CORRECT JSON:
+{
+  "test_type": "unit_mocked",
+  "target_name": "showVetList",
+  "target_class": "VetController",
+  "language": "java",
+  "test_cases": [
+    {
+      "name": "testShowVetListReturnsViewName",
+      "category": "happy_path",
+      "description": "Returns the view name when called with valid page and model",
+      "inputs": {
+        "page": 1,
+        "model": "mock(Model.class)"
+      },
+      "setup": [
+        "Page<Vet> mockPage = mock(Page.class)",
+        "when(mockPage.getContent()).thenReturn(List.of(new Vet()))",
+        "when(vetRepository.findAll(any(Pageable.class))).thenReturn(mockPage)"
+      ],
+      "expected": {
+        "returns": "\\"vets/vetList\\""
+      }
+    }
+  ],
+  "imports_needed": [
+    "import org.springframework.data.domain.Page",
+    "import org.springframework.data.domain.Pageable",
+    "import static org.mockito.Mockito.*",
+    "import static org.mockito.ArgumentMatchers.*"
+  ]
+}
+
+CRITICAL RULES:
+1. "inputs" must EXACTLY MATCH the method signature parameters
+   - If method is foo(int x, Model y) then inputs = {"x": 1, "y": "mock(Model.class)"}
+   - Do NOT add extra parameters that don't exist in the signature
+   - Do NOT omit required parameters
+
+2. String return values MUST be escaped:
+   - Method returns "hello" -> "returns": "\\"hello\\""
+   - Method returns "vets/vetList" -> "returns": "\\"vets/vetList\\""
+   - NOT: "returns": "vets/vetList" (missing quotes!)
+   - NOT: "returns": vets/vetList (invalid JSON!)
+
+3. Each import on its OWN LINE - never concatenate:
+   CORRECT: ["import java.util.List", "import java.time.LocalDate"]
+   WRONG:   ["import java.util.List;import java.time.LocalDate"]
+
+4. "setup" is for mock configuration BEFORE calling the method
+   - Use when().thenReturn() patterns
+   - Create mock objects needed for the test
+'''
+
+# =============================================================================
 # SPRING MVC CONTROLLER EXAMPLES
 # =============================================================================
 
@@ -640,6 +715,17 @@ WRONG - Do NOT use constructors with arguments unless you see them in the source
   new Specialty("Cardiology") // WRONG - Specialty has no String constructor
   new Visit("checkup")        // WRONG - Visit has no String constructor
 
+JAVA STANDARD LIBRARY TYPES - USE THESE PATTERNS:
+  LocalDate:     LocalDate.of(2020, 5, 15)
+  LocalDateTime: LocalDateTime.of(2020, 5, 15, 10, 30)
+  LocalTime:     LocalTime.of(10, 30)
+  Instant:       Instant.now()
+  Date:          new Date()
+  BigDecimal:    BigDecimal.valueOf(100)
+  UUID:          UUID.randomUUID()
+
+DO NOT create standard types with new: new LocalDate() is WRONG!
+
 SPRING MVC CONTROLLER TESTING (when class has @Controller or ends with 'Controller'):
 - Use @ExtendWith(MockitoExtension.class) at class level
 - Use @Mock for injected dependencies (repositories, services)
@@ -674,8 +760,8 @@ You must output ONLY valid JSON - no markdown, no explanations."""
     }
 
     @classmethod
-    def _get_mock_guidance(cls, func: FunctionContext) -> str:
-        """Generate guidance on how to mock complex parameters."""
+    def _get_mock_guidance(cls, func: FunctionContext, language: str = "python") -> str:
+        """Generate guidance on how to mock complex parameters (language-aware)."""
         guidance_lines = []
         needs_mock_import = False
 
@@ -691,27 +777,41 @@ You must output ONLY valid JSON - no markdown, no explanations."""
 
             if is_complex and not is_primitive:
                 needs_mock_import = True
-                guidance_lines.append(
-                    f'   - {param.name}: Use Mock(spec={type_hint}) - do NOT invent fake classes'
-                )
+                if language == "java":
+                    guidance_lines.append(
+                        f'   - {param.name}: Use mock({type_hint}.class) with Mockito'
+                    )
+                else:
+                    guidance_lines.append(
+                        f'   - {param.name}: Use Mock(spec={type_hint}) - do NOT invent fake classes'
+                    )
 
         if not guidance_lines:
             return ""
 
-        header = """
+        if language == "java":
+            header = """
+⚠️ MOCK USAGE REQUIRED (USE MOCKITO):
+   For complex parameter types, use Mockito mocks:"""
+            mock_import = '\n   - Add "import static org.mockito.Mockito.*" to imports_needed' if needs_mock_import else ""
+        else:
+            header = """
 ⚠️ MOCK USAGE REQUIRED (DO NOT HALLUCINATE CLASSES):
    For complex parameter types, use unittest.mock.Mock:"""
-
-        mock_import = '\n   - Add "from unittest.mock import Mock" to imports_needed' if needs_mock_import else ""
+            mock_import = '\n   - Add "from unittest.mock import Mock" to imports_needed' if needs_mock_import else ""
 
         return header + "\n" + "\n".join(guidance_lines) + mock_import
 
     @classmethod
-    def _get_fixture_patterns(cls, func: FunctionContext) -> str:
-        """Generate fixture patterns based on detected requirements."""
+    def _get_fixture_patterns(cls, func: FunctionContext, language: str = "python") -> str:
+        """Generate fixture patterns based on detected requirements (language-aware)."""
+        # Java doesn't use pytest fixtures - it uses @BeforeEach and @Mock annotations
+        if language == "java":
+            return ""  # Java patterns are shown in the examples section
+
         fixtures = []
 
-        # Flask fixtures
+        # Flask fixtures (Python only)
         if 'flask_app' in func.requires_context:
             fixtures.append('''
 FIXTURE PATTERN - Flask App:
@@ -729,7 +829,7 @@ def app_context(app):
 ```
 Use fixture name "app_context" in your test.''')
 
-        # Request context
+        # Request context (Python only)
         if 'request_context' in func.requires_context:
             fixtures.append('''
 FIXTURE PATTERN - Request Context:
@@ -740,7 +840,7 @@ def request_context(app):
         yield
 ```''')
 
-        # Complex parameter mocking
+        # Complex parameter mocking (Python only)
         for param in func.parameters:
             if param.type_hint and any(p in param.type_hint for p in cls.COMPLEX_TYPE_PATTERNS):
                 fixtures.append(f'''
@@ -760,9 +860,17 @@ Reference as "mock_{param.name}" in fixtures_needed.''')
 
         return "\n".join(["AVAILABLE FIXTURE PATTERNS:"] + fixtures)
 
-    @staticmethod
-    def _get_safe_imports(func: FunctionContext) -> str:
+    @classmethod
+    def _get_safe_imports(cls, func: FunctionContext) -> str:
         """List imports that are safe to use (actually exist)."""
+        # Detect language
+        language = cls._detect_language(str(func.location.file_path))
+
+        if language == "java":
+            # For Java, don't show Python imports - show Java/JUnit guidance instead
+            return ""  # Java imports are shown in the examples section
+
+        # Python imports
         safe_imports = [
             "pytest",
             "unittest.mock.Mock",
@@ -866,23 +974,77 @@ DO NOT USE: MockLoader, FakeRequest, TestResponse, or any invented class names."
             return 'python'
 
     @classmethod
+    def _build_explicit_method_signature(cls, func: FunctionContext) -> str:
+        """Build an explicit method signature string for clarity.
+
+        Instead of making the LLM parse source code, we give it the exact signature:
+        ClassName.methodName(Type1 param1, Type2 param2) -> ReturnType
+        """
+        params = []
+        for p in func.parameters:
+            param_type = p.type_hint or "Object"
+            params.append(f"{param_type} {p.name}")
+
+        params_str = ", ".join(params)
+        return_type = func.return_type or "void"
+        class_name = func.class_name or "Unknown"
+
+        return f"{class_name}.{func.name}({params_str}) -> {return_type}"
+
+    @classmethod
     def build_function_prompt(
         cls,
         func: FunctionContext,
         patterns: ProjectTestPatterns | None = None,
+        api_context: str | None = None,
         existing_tests: str | None = None
     ) -> str:
-        """Build a prompt for generating test specs for a function."""
+        """Build a prompt for generating test specs for a function.
+
+        Args:
+            func: The function context
+            patterns: Optional project patterns
+            api_context: Optional API context string (discovered class methods/constructors)
+            existing_tests: Optional existing test code for reference
+        """
 
         # Detect language from file path
         language = cls._detect_language(str(func.location.file_path))
 
         # Build parameter info
         params_info = []
+        java_type_guidance = []
+
+        # Standard Java types that have specific construction patterns
+        JAVA_STANDARD_TYPES = {
+            'LocalDate': 'LocalDate.of(2020, 5, 15)',
+            'LocalDateTime': 'LocalDateTime.of(2020, 5, 15, 10, 30)',
+            'LocalTime': 'LocalTime.of(10, 30)',
+            'Instant': 'Instant.now()',
+            'ZonedDateTime': 'ZonedDateTime.now()',
+            'Date': 'new Date()',
+            'BigDecimal': 'BigDecimal.valueOf(100)',
+            'BigInteger': 'BigInteger.valueOf(100)',
+            'UUID': 'UUID.randomUUID()',
+        }
+
         for p in func.parameters:
             param_str = f"- {p.name}"
             if p.type_hint:
                 param_str += f": {p.type_hint}"
+                # Add Java type creation guidance
+                if language == "java" and p.type_hint:
+                    type_name = p.type_hint.split('<')[0].strip()  # Handle generics
+
+                    # Check if it's a standard Java type with specific pattern
+                    if type_name in JAVA_STANDARD_TYPES:
+                        java_type_guidance.append(
+                            f"  - {p.name}: Use `{JAVA_STANDARD_TYPES[type_name]}`"
+                        )
+                    elif type_name not in ('int', 'long', 'double', 'float', 'boolean', 'String', 'Integer', 'Long', 'Double', 'Boolean', 'Object', 'void'):
+                        java_type_guidance.append(
+                            f"  - {p.name}: Create with `{type_name} {p.name} = new {type_name}();` then use setters"
+                        )
             if p.default_value:
                 param_str += f" = {p.default_value}"
             if p.is_optional:
@@ -890,6 +1052,10 @@ DO NOT USE: MockLoader, FakeRequest, TestResponse, or any invented class names."
             params_info.append(param_str)
 
         params_section = "\n".join(params_info) if params_info else "None"
+
+        # Add Java type guidance if applicable
+        if java_type_guidance:
+            params_section += "\n\nHOW TO CREATE THESE PARAMETER TYPES:\n" + "\n".join(java_type_guidance)
 
         # Build pattern hints
         pattern_hints = ""
@@ -902,9 +1068,9 @@ DO NOT USE: MockLoader, FakeRequest, TestResponse, or any invented class names."
         # Build semantic hints
         semantic_hints = cls._build_semantic_hints(func)
 
-        # Build anti-hallucination guidance (Options 1, 2, 3)
-        mock_guidance = cls._get_mock_guidance(func)
-        fixture_patterns = cls._get_fixture_patterns(func)
+        # Build anti-hallucination guidance (Options 1, 2, 3) - language-aware
+        mock_guidance = cls._get_mock_guidance(func, language)
+        fixture_patterns = cls._get_fixture_patterns(func, language)
         safe_imports = cls._get_safe_imports(func)
 
         # Select relevant official examples (NEW - one-shot examples)
@@ -922,20 +1088,48 @@ SEMANTIC ANALYSIS:
         # Language-specific code fence
         code_lang = "java" if language == "java" else "python"
 
-        prompt = f"""Analyze this {language.upper()} function and generate a test specification JSON.
+        # Build explicit method signature for clarity
+        explicit_signature = cls._build_explicit_method_signature(func)
 
-FUNCTION TO TEST:
+        # For Java, use the explicit output example
+        java_output_example = ""
+        if language == "java":
+            java_output_example = JAVA_EXPLICIT_OUTPUT_EXAMPLE
+
+        # Build API context section (critical for Java)
+        api_context_section = ""
+        if api_context and language == "java":
+            api_context_section = f"""
+═══════════════════════════════════════════════════════════════════════════════
+AVAILABLE APIs - USE ONLY THESE METHODS (from actual source code):
+═══════════════════════════════════════════════════════════════════════════════
+{api_context}
+
+CRITICAL RULES:
+1. Only call methods listed above! Do NOT invent methods.
+2. Check which CLASS has the method! If testing PetTypeFormatter.print():
+   - CORRECT: formatter.print(petType, locale)  // Call on the class being tested
+   - WRONG:   petType.print(...)                // petType is a PARAMETER, not the class!
+3. The method under test belongs to {func.class_name}. Call it on the test instance.
+4. Parameter objects (like PetType) are just DATA passed to the method.
+═══════════════════════════════════════════════════════════════════════════════
+"""
+
+        prompt = f"""Analyze this {language.upper()} method and generate a test specification JSON.
+
+═══════════════════════════════════════════════════════════════════════════════
+METHOD SIGNATURE (inputs MUST match these parameters exactly):
+  {explicit_signature}
+═══════════════════════════════════════════════════════════════════════════════
+{api_context_section}
+Source code:
 ```{code_lang}
 {func.source_code}
 ```
 
-FUNCTION DETAILS:
-- Name: {func.name}
-- File: {func.location.file_path}
-- Is async: {func.is_async}
-- Is method: {func.is_method}
+DETAILS:
 - Class: {func.class_name or 'N/A'}
-- Return type: {func.return_type or 'Unknown'}
+- Return type: {func.return_type or 'void'}
 {semantic_metadata}
 
 PARAMETERS:
@@ -956,6 +1150,8 @@ FUNCTION CALLS (potential mock targets):
 
 {official_examples}
 
+{java_output_example}
+
 {f'EXISTING TEST PATTERNS IN PROJECT:{chr(10)}{existing_tests}' if existing_tests else ''}
 
 Generate a JSON test specification with:
@@ -967,6 +1163,30 @@ Generate a JSON test specification with:
 4. Any mocks needed
 5. For generators: expected "returns" should be a LIST of values
 6. For Flask functions: include "flask_app" in fixtures_needed
+
+CRITICAL FOR JAVA - "inputs" must be VALUES that go directly in method calls:
+CORRECT: {{"name": "\"Fluffy\""}}             -> methodName("Fluffy")
+CORRECT: {{"date": "LocalDate.of(2023,1,1)"}} -> methodName(LocalDate.of(2023,1,1))
+CORRECT: {{"count": 5}}                       -> methodName(5)
+
+WHEN SETUP CREATES A VARIABLE, USE THE VARIABLE NAME IN INPUTS:
+Example - if setup creates "Specialty specialty = new Specialty();"
+CORRECT: {{"specialty": "specialty"}}        -> addSpecialty(specialty)   // Reference the variable
+WRONG:   {{"specialty": "\"specialty\""}}    -> addSpecialty("specialty") // Creates a STRING literal!
+WRONG:   {{"specialty": "new Specialty()"}}  -> addSpecialty(new Specialty()) // Creates NEW unconfigured object!
+
+The "inputs" JSON values are inserted DIRECTLY into the method call:
+- JSON value "pet" becomes Java code: pet (a variable reference)
+- JSON value "\"Fluffy\"" becomes Java code: "Fluffy" (a string literal)
+DO NOT add extra escaped quotes around variable names!
+
+CRITICAL - DO NOT PUT THE METHOD CALL IN SETUP:
+- The "setup" field is for PREPARATION code only (creating objects, mocking, etc.)
+- The actual method call is generated automatically from "inputs"
+- NEVER put "var result = ..." or method calls in the "setup" field!
+- Example for testing {func.class_name}.{func.name}():
+  CORRECT setup: ["PetType pet = new PetType()", "pet.setName(\"Dog\")", "when(repo.findX()).thenReturn(...)"]
+  WRONG setup:   ["...", "var result = pet.parse(...)"]  // DO NOT call the method in setup!
 
 OUTPUT JSON SCHEMA:
 {{

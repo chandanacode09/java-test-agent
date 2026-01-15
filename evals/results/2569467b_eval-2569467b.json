@@ -1,0 +1,96 @@
+{
+  "run_id": "2569467b",
+  "run_name": "eval-2569467b",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-pettypeformatter-013",
+      "run_id": "91d126ee",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "fail",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "fail",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "fail",
+              "score": 0.0,
+              "message": "Compilation failed with 2 errors",
+              "details": {
+                "error_count": 2,
+                "error_lines": [
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[16,30] constructor PetTypeFormatter in class org.springframework.samples.petclinic.owner.PetTypeFormatter cannot be applied to given types;",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[16,30] constructor PetTypeFormatter in class org.springframework.samples.petclinic.owner.PetTypeFormatter cannot be applied to given types;"
+                ],
+                "stderr": ""
+              },
+              "duration_ms": 12056.339025497437
+            },
+            {
+              "grader_name": "execution",
+              "result": "fail",
+              "score": 0.0,
+              "message": "No tests were executed",
+              "details": {
+                "stderr": "",
+                "stdout": "ory\n[ERROR]   found:    no arguments\n[ERROR]   reason: actual and formal argument lists differ in length\n[ERROR] \n[ERROR] -> [Help 1]\n[ERROR] \n[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.\n[ERROR] Re-run Maven using the -X switch to enable full debug logging.\n[ERROR] \n[ERROR] For more information about the errors and possible solutions, please read the following articles:\n[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException\n"
+              },
+              "duration_ms": 17283.47897529602
+            }
+          ],
+          "tests_generated": 0,
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 1,
+          "fixes_applied": 0,
+          "duration_sec": 196.06984305381775,
+          "generated_test_code": "package org.springframework.samples.petclinic.owner;\n\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport org.junit.jupiter.api.Test;\n\nimport java.util.Locale;\n\npublic class PetTypeFormatterTest {\n\n\tprivate PetTypeFormatter controller;\n\n\t@BeforeEach\n\tpublic void setUp() {\n\t\tcontroller = new PetTypeFormatter();\n\t}\n\n\t@Test\n\t@DisplayName(\"Print with valid inputs returns non-null string\")\n\tpublic void testPrintHappyPath() {\n\t\t// Given\n\t\tPetType petType = new PetType();\n\t\tLocale locale = Locale.ENGLISH;\n\n\t\t// When\n\t\tString result = controller.print(petType, locale);\n\n\t\t// Then\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Print with null petType throws exception\")\n\tpublic void testPrintWithNullPetType() {\n\t\t// Given\n\t\tLocale locale = Locale.ENGLISH;\n\n\t\t// When & Then\n\t\tassertThrows(RuntimeException.class, () -> controller.print(null, locale));\n\t}\n\n\t@Test\n\t@DisplayName(\"Parse with valid text returns non-null PetType\")\n\tpublic void testParseHappyPath() {\n\t\t// Given\n\t\tString text = \"Dog\";\n\t\tLocale locale = Locale.ENGLISH;\n\n\t\t// When\n\t\tPetType result = controller.parse(text, locale);\n\n\t\t// Then\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Parse with null text throws exception\")\n\tpublic void testParseWithNullText() {\n\t\t// Given\n\t\tString text = null;\n\t\tLocale locale = Locale.ENGLISH;\n\n\t\t// When & Then\n\t\tassertThrows(RuntimeException.class, () -> controller.parse(text, locale));\n\t}\n\n}",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 196.076888,
+      "started_at": "2026-01-11T21:27:24.692023",
+      "completed_at": "2026-01-11T21:30:40.768911",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 0,
+    "failed": 1,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 0.0,
+    "avg_tests_generated": 0.0,
+    "avg_tests_passed": 0.0,
+    "avg_duration_sec": 196.06984305381775,
+    "avg_react_iterations": 1.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-11T21:27:24.692013",
+  "completed_at": "2026-01-11T21:30:40.769918",
+  "baseline_run_id": null
+}

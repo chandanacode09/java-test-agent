@@ -1,0 +1,101 @@
+{
+  "run_id": "02bdfad6",
+  "run_name": "eval-02bdfad6",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-vet-001",
+      "run_id": "70bff9d8",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "fail",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "fail",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "pass",
+              "score": 1.0,
+              "message": "Compilation successful",
+              "details": {
+                "stdout": ""
+              },
+              "duration_ms": 4744.385004043579
+            },
+            {
+              "grader_name": "execution",
+              "result": "fail",
+              "score": 0.8,
+              "message": "4/5 tests passed (0 failed, 1 errors)",
+              "details": {
+                "tests_run": 5,
+                "tests_passed": 4,
+                "tests_failed": 0,
+                "tests_error": 1,
+                "failures": [
+                  {
+                    "test": "testGetSpecialtiesReturnsSortedList",
+                    "class": "org.springframework.samples.petclinic.vet.VetTest",
+                    "type": "java.lang.NullPointerException",
+                    "message": "Cannot invoke \"java.lang.Comparable.compareTo(Object)\" because the return value of \"java.util.function.Function.apply(Object)\" is null"
+                  }
+                ]
+              },
+              "duration_ms": 4107.611894607544
+            }
+          ],
+          "tests_generated": 5,
+          "tests_passed": 4,
+          "tests_failed": 1,
+          "compilation_errors": 0,
+          "react_iterations": 3,
+          "fixes_applied": 0,
+          "duration_sec": 206.32404828071594,
+          "generated_test_code": "package org.springframework.samples.petclinic.vet;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport java.util.Arrays;\nimport org.springframework.samples.petclinic.vet.Vet;\nimport org.springframework.samples.petclinic.vet.Specialty;\nimport java.util.List;\n\nclass VetTest {\n\n\tprivate Vet instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new Vet();\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that when specialties is not null, the method returns the existing set\")\n\tvoid testGetSpecialtiesInternalReturnsExistingSet() {\n\t\tvar result = instance.getSpecialtiesInternal();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that when specialties is null, the method initializes it to a new empty HashSet and returns it\")\n\tvoid testGetSpecialtiesInternalInitializesNewSetWhenNull() {\n\t\tvar result = instance.getSpecialtiesInternal();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify that getSpecialties returns the list of specialties sorted by name when multiple specialties exist\")\n\tvoid testGetSpecialtiesReturnsSortedList() {\n\t\tvar cardiology = new Specialty();\n\t\tvar dentistry = new Specialty();\n\t\tinstance.addSpecialty(cardiology);\n\t\tinstance.addSpecialty(dentistry);\n\t\tvar result = instance.getSpecialties();\n\t\tassertEquals(Arrays.asList(cardiology, dentistry), result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify that getSpecialties returns an empty list when no specialties have been added\")\n\tvoid testGetSpecialtiesReturnsEmptyList() {\n\t\tvar result = instance.getSpecialties();\n\t\tassertEquals(Arrays.asList(), result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify that getSpecialties returns a list containing the single specialty when only one exists\")\n\tvoid testGetSpecialtiesWithOneSpecialty() {\n\t\tvar cardiology = new Specialty();\n\t\tinstance.addSpecialty(cardiology);\n\t\tvar result = instance.getSpecialties();\n\t\tassertEquals(Arrays.asList(cardiology), result);\n\t}\n\n}",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 206.326459,
+      "started_at": "2026-01-10T21:10:41.897999",
+      "completed_at": "2026-01-10T21:14:08.224458",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 0,
+    "failed": 1,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 0.0,
+    "avg_tests_generated": 5.0,
+    "avg_tests_passed": 4.0,
+    "avg_duration_sec": 206.32404828071594,
+    "avg_react_iterations": 3.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-10T21:10:41.897987",
+  "completed_at": "2026-01-10T21:14:08.225069",
+  "baseline_run_id": null
+}

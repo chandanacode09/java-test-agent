@@ -1,0 +1,30 @@
+{
+  "test_type": "unit_class",
+  "target_name": "getName",
+  "target_class": "Example",
+  "test_cases": [
+    {
+      "name": "test_getName_returns_name",
+      "category": "happy_path",
+      "description": "Test that getName returns the correct name",
+      "inputs": {},
+      "expected": {
+        "returns": "\"test name\""
+      }
+    },
+    {
+      "name": "test_getName_returns_empty_for_new_instance",
+      "category": "edge_case",
+      "description": "Test that getName returns empty string for new instance",
+      "inputs": {},
+      "expected": {
+        "returns": "\"\""
+      }
+    }
+  ],
+  "imports_needed": [
+    "import org.junit.jupiter.api.Test",
+    "import static org.junit.jupiter.api.Assertions.*"
+  ],
+  "fixtures_needed": []
+}

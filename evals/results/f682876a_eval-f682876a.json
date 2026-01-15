@@ -1,0 +1,99 @@
+{
+  "run_id": "f682876a",
+  "run_name": "eval-f682876a",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-pet-003",
+      "run_id": "f689718b",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "fail",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "fail",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "fail",
+              "score": 0.0,
+              "message": "Compilation failed with 8 errors",
+              "details": {
+                "error_count": 8,
+                "error_lines": [
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTest.java:[80,21] cannot infer type for local variable result",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTest.java:[87,47] incompatible types: java.lang.String cannot be converted to org.springframework.samples.petclinic.owner.PetType",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTest.java:[94,47] incompatible types: org.springframework.samples.petclinic.owner.Visit cannot be converted to org.springframework.samples.petclinic.owner.PetType",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTest.java:[102,41] cannot find symbol",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTest.java:[80,21] cannot infer type for local variable result"
+                ],
+                "stderr": ""
+              },
+              "duration_ms": 4143.606185913086
+            },
+            {
+              "grader_name": "execution",
+              "result": "fail",
+              "score": 0.0,
+              "message": "No tests were executed",
+              "details": {
+                "stderr": "",
+                "stdout": "mbol:   variable returnedCollection\n[ERROR]   location: class org.springframework.samples.petclinic.owner.PetTest\n[ERROR] -> [Help 1]\n[ERROR] \n[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.\n[ERROR] Re-run Maven using the -X switch to enable full debug logging.\n[ERROR] \n[ERROR] For more information about the errors and possible solutions, please read the following articles:\n[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException\n"
+              },
+              "duration_ms": 4039.3199920654297
+            }
+          ],
+          "tests_generated": 0,
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 0,
+          "fixes_applied": 0,
+          "duration_sec": 177.04838228225708,
+          "generated_test_code": "package org.springframework.samples.petclinic.owner;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\n\nclass PetTest {\n\n\tprivate Pet instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new Pet();\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setting a valid LocalDate birthDate correctly assigns the value\")\n\tvoid testSetBirthDateHappyPath() {\n\t\tinstance.setBirthDate(LocalDate.of(2020, 1, 1));\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setting a past date works correctly\")\n\tvoid testSetBirthDateWithPastDate() {\n\t\tinstance.setBirthDate(LocalDate.of(1990, 5, 15));\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setting birthDate to null is handled (assuming no validation)\")\n\tvoid testSetBirthDateWithNull() {\n\t\tinstance.setBirthDate(null);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setting a future date (edge boundary) works correctly\")\n\tvoid testSetBirthDateWithFutureDate() {\n\t\tinstance.setBirthDate(LocalDate.of(2050, 12, 31));\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getBirthDate returns the correctly set birthDate for a Pet instance\")\n\tvoid testGetBirthDateReturnsExpectedDate() {\n\t\tvar result = instance.getBirthDate();\n\t\tassertEquals(LocalDate.of(2020, 1, 1), result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getBirthDate returns null when birthDate is not set (assuming default null)\")\n\tvoid testGetBirthDateReturnsNullWhenNotSet() {\n\t\tvar result = instance.getBirthDate();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Create a Pet instance, set its type to a new PetType object with name 'Dog', then call getType and assert it returns the same PetType instance\")\n\tvoid testGetTypeReturnsSetType() {\n\t\tvar result = instance.getType();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Create a new Pet instance without setting any type, call getType, and assert it returns null\")\n\tvoid testGetTypeReturnsNullWhenNotSet() {\n\t\tvar result = instance.getType();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Create a Pet instance, explicitly set its type to null using setType(null), then call getType and assert it returns null\")\n\tvoid testGetTypeReturnsNullAfterSettingToNull() {\n\t\tvar result = instance.getType();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setType sets a valid PetType without throwing exceptions\")\n\tvoid testSetTypeWithValidPetType() {\n\t\tvar result = instance.setType(new PetType());\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setType handles null input without throwing exceptions\")\n\tvoid testSetTypeWithNull() {\n\t\tvar result = instance.setType(\"null\");\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that addVisit adds a visit to the pet's visits collection zonder without throwing exceptions\")\n\tvoid testAddVisit() {\n\t\tvar result = instance.setType(new Visit());\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getVisits() returns an empty collection when no visits have been added to the Pet instance\")\n\tvoid testGetVisitsReturnsEmptyCollection() {\n\t\tvar result = instance.getVisits();\n\t\tassertEquals(assertTrue(returnedCollection.isEmpty()), result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that a valid Visit object is added to the pet's visits collection\")\n\tvoid testAddVisitAddsVisit() {\n\t\tinstance.addVisit(new Visit());\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that passing null as visit adds null to the pet's visits collection\")\n\tvoid testAddVisitWithNull() {\n\t\tinstance.addVisit(null);\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 177.049223,
+      "started_at": "2026-01-10T13:05:41.673871",
+      "completed_at": "2026-01-10T13:08:38.723094",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 0,
+    "failed": 1,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 0.0,
+    "avg_tests_generated": 0.0,
+    "avg_tests_passed": 0.0,
+    "avg_duration_sec": 177.04838228225708,
+    "avg_react_iterations": 0.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-10T13:05:41.673862",
+  "completed_at": "2026-01-10T13:08:38.723167",
+  "baseline_run_id": null
+}

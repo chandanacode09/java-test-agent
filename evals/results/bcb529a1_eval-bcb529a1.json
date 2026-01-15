@@ -1,0 +1,98 @@
+{
+  "run_id": "bcb529a1",
+  "run_name": "eval-bcb529a1",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-vet-001",
+      "run_id": "1acdbaf7",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "fail",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "fail",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "fail",
+              "score": 0.0,
+              "message": "Compilation failed with 4 errors",
+              "details": {
+                "error_count": 4,
+                "error_lines": [
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetTest.java:[129,22] unclosed string literal",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetTest.java:[129,86] reached end of file while parsing",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetTest.java:[129,22] unclosed string literal",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetTest.java:[129,86] reached end of file while parsing"
+                ],
+                "stderr": ""
+              },
+              "duration_ms": 12403.048038482666
+            },
+            {
+              "grader_name": "execution",
+              "result": "fail",
+              "score": 0.0,
+              "message": "No tests were executed",
+              "details": {
+                "stderr": "",
+                "stdout": "c/src/test/java/org/springframework/samples/petclinic/vet/VetTest.java:[129,86] reached end of file while parsing\n[ERROR] -> [Help 1]\n[ERROR] \n[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.\n[ERROR] Re-run Maven using the -X switch to enable full debug logging.\n[ERROR] \n[ERROR] For more information about the errors and possible solutions, please read the following articles:\n[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException\n"
+              },
+              "duration_ms": 10339.820861816406
+            }
+          ],
+          "tests_generated": 0,
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 1,
+          "fixes_applied": 0,
+          "duration_sec": 105.76754903793335,
+          "generated_test_code": "package org.springframework.samples.petclinic.vet;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport java.util.HashSet;\nimport java.util.Set;\nimport java.util.List;\nimport java.util.Collections;\nimport org.springframework.samples.petclinic.vet.Vet;\nimport org.springframework.samples.petclinic.vet.Specialty;\n\nclass VetTest {\n\n\tprivate Vet instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new Vet();\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getSpecialtiesInternal returns the same Set instance when called multiple times without reinitializing\")\n\tvoid testGetSpecialtiesInternalReturnsSameInstanceSubsequentCalls() {\n\t\tvar result = instance.getSpecialtiesInternal();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns a list of specialties sorted alphabetically by name\")\n\tvoid testGetSpecialtiesReturnsSortedList() {\n\t\tVet vet = new Vet();\n\t\tSpecialty cardio = new Specialty();\n\t\tcardio.setName(\"Cardiology\");\n\t\tSpecialty dent = new Specialty();\n\t\tdent.setName(\"Dentistry\");\n\t\tSpecialty surgery = new Specialty();\n\t\tsurgery.setName(\"Surgery\");\n\t\tvet.addSpecialty(surgery);\n\t\tvet.addSpecialty(cardio);\n\t\tvet.addSpecialty(dent);\n\t\tvar result = vet.getSpecialties();\n\t\tassertEquals(List.of(cardio, dent, surgery), result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns an empty list when the vet has no specialties\")\n\tvoid testGetSpecialtiesReturnsEmptyList() {\n\t\tVet vet = new Vet();\n\t\tvar result = instance.getSpecialties();\n\t\tassertEquals(Collections.emptyList(), result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Throws NullPointerException when a specialty has a null name during sorting\")\n\tvoid testGetSpecialtiesThrowsExceptionForNullName() {\n\t\tVet vet = new Vet();\n\t\tSpecialty s1 = new Specialty();\n\t\ts1.setName(null);\n\t\tvet.addSpecialty(s1);\n\t\tassertThrows(NullPointerException.class, () -> {\n\t\t\tvet.getSpecialties();\n\t\t});\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns 0 when Vet has no specialties added\")\n\tvoid testGetNrOfSpecialtiesReturnsZeroWhenNoSpecialties() {\n\t\tVet vet = new Vet();\n\t\tvar result = instance.getNrOfSpecialties();\n\t\tassertEquals(0, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns 1 when Vet has exactly one specialty added\")\n\tvoid testGetNrOfSpecialtiesReturnsOneWhenOneSpecialty() {\n\t\tVet vet = new Vet();\n\t\tSpecialty specialty = new Specialty();\n\t\tvet.addSpecialty(specialty);\n\t\tvar result = vet.getNrOfSpecialties();\n\t\tassertEquals(1, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns the correct count when Vet has multiple specialties added\")\n\tvoid testGetNrOfSpecialtiesReturnsCountWhenMultipleSpecialties() {\n\t\tVet vet = new Vet();\n\t\tSpecialty specialty1 = new Specialty();\n\t\tSpecialty specialty2 = new Specialty();\n\t\tSpecialty specialty3 = new Specialty();\n\t\tvet.addSpecialty(specialty1);\n\t\tvet.addSpecialty(specialty2);\n\t\tvet.addSpecialty(specialty3);\n\t\tvar result = vet.getNrOfSpecialties();\n\t\tassertEquals(3, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Handles the case where specialties set is empty, ensuring no errors and returns 0\")\n\tvoid testGetNrOfSpecialtiesHandlesEmptySet() {\n\t\tVet vet = new Vet();\n\t\tvar result = instance.getNrOfSpecialties();\n\t\tassertEquals(0, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that adding a valid specialty increases the number of specialties by one and confirms it's added\")\n\tvoid testAddSpecialtyAddsToVet() {\n\t\tVet vet = new Vet();\n\t\tint initialNr = vet.getNrOfSpecialties();\n\t\tSpecialty specialty = new Specialty();\n\t\tspecialty.setName(\"Cardiology\");\n\t\tinstance.addSpecialty(\"specialty\");\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that adding a null specialty throws an exception as specialty is required\")\n\tvoid testAddSpecialtyWithNullThrowsException() {\n\t\tVet vet = new Vet();\n\t\tSpecialty specialty = null;\n\t\tassertThrows(NullPointerException.class, () -> {\n\t\t\tinstance.addSpecialty(\"specialty\");\n\t\t});\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that adding the same specialty multiple times does not increase the count beyond one\")\n\tvoid testAddSpecialtyDuplicateDoesNotIncreaseCount() {\n\t\tVet vet = new Vet();\n\t\tint initialNr = vet.getNrOfSpecialties();\n\t\tSpecialty specialty = new Specialty();\n\t\tspecialty.setName(\"Cardiology\");\n\t\tinstance.addSpecialty(\"specialty\");\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 105.769991,
+      "started_at": "2026-01-11T13:57:24.285368",
+      "completed_at": "2026-01-11T13:59:10.055359",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 0,
+    "failed": 1,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 0.0,
+    "avg_tests_generated": 0.0,
+    "avg_tests_passed": 0.0,
+    "avg_duration_sec": 105.76754903793335,
+    "avg_react_iterations": 1.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-11T13:57:24.285347",
+  "completed_at": "2026-01-11T13:59:10.055732",
+  "baseline_run_id": null
+}

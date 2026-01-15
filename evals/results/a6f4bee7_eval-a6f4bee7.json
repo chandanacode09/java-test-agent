@@ -1,0 +1,99 @@
+{
+  "run_id": "a6f4bee7",
+  "run_name": "eval-a6f4bee7",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-pettypeformatter-013",
+      "run_id": "2b51cbfe",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "fail",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "fail",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "fail",
+              "score": 0.0,
+              "message": "Compilation failed with 6 errors",
+              "details": {
+                "error_count": 6,
+                "error_lines": [
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[48,33] cannot find symbol",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[59,28] cannot find symbol",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[70,28] cannot find symbol",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[48,33] cannot find symbol",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[59,28] cannot find symbol"
+                ],
+                "stderr": ""
+              },
+              "duration_ms": 8191.637992858887
+            },
+            {
+              "grader_name": "execution",
+              "result": "fail",
+              "score": 0.0,
+              "message": "No tests were executed",
+              "details": {
+                "stderr": "",
+                "stdout": "e>,java.util.Locale)\n[ERROR]   location: variable pet of type org.springframework.samples.petclinic.owner.PetType\n[ERROR] -> [Help 1]\n[ERROR] \n[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.\n[ERROR] Re-run Maven using the -X switch to enable full debug logging.\n[ERROR] \n[ERROR] For more information about the errors and possible solutions, please read the following articles:\n[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException\n"
+              },
+              "duration_ms": 9359.490871429443
+            }
+          ],
+          "tests_generated": 0,
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 1,
+          "fixes_applied": 0,
+          "duration_sec": 110.52302289009094,
+          "generated_test_code": "package org.springframework.samples.petclinic.owner;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport org.mockito.InjectMocks;\nimport org.mockito.Mock;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport static org.mockito.Mockito.*;\nimport static org.mockito.ArgumentMatchers.*;\nimport org.springframework.data.domain.Page;\nimport org.springframework.data.domain.PageRequest;\nimport org.springframework.data.domain.Pageable;\nimport org.mockito.Mock;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport java.util.List;\nimport java.text.ParseException;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport java.util.Locale;\nimport org.mockito.InjectMocks;\nimport org.junit.jupiter.api.Test;\nimport static org.junit.jupiter.api.Assertions.*;\nimport static org.mockito.Mockito.*;\n\n@ExtendWith(MockitoExtension.class)\nclass PetTypeFormatterTest {\n\n\t@Mock\n\tprivate PetTypeRepository types;\n\n\t@InjectMocks\n\tprivate PetTypeFormatter controller;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\t// Mockito initializes @Mock and @InjectMocks automatically\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns the matching PetType when the provided text matches a PetType name in the collection\")\n\tvoid testParseReturnsMatchingPetTypeWhenFound() {\n\t\tPetType pet = new PetType();\n\t\tpet.setName(\"Dog\");\n\t\twhen(types.findPetTypes()).thenReturn(List.of(pet));\n\t\tvar result = pet.parse(\"Dog\", Locale.ENGLISH);\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Throws ParseException when no PetType with the matching name is found\")\n\tvoid testParseThrowsParseExceptionWhenTypeNotFound() {\n\t\tPetType pet = new PetType();\n\t\tpet.setName(\"Dog\");\n\t\twhen(types.findPetTypes()).thenReturn(List.of(pet));\n\t\tassertThrows(ParseException.class, () -> {\n\t\t\tpet.parse(\"Cat\", Locale.ENGLISH);\n\t\t});\n\t}\n\n\t@Test\n\t@DisplayName(\"Throws ParseException when text is null and no PetType matches\")\n\tvoid testParseThrowsParseExceptionWithNullText() {\n\t\tPetType pet = new PetType();\n\t\tpet.setName(\"Dog\");\n\t\twhen(types.findPetTypes()).thenReturn(List.of(pet));\n\t\tassertThrows(ParseException.class, () -> {\n\t\t\tpet.parse(null, Locale.ENGLISH);\n\t\t});\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 110.528802,
+      "started_at": "2026-01-11T13:31:39.531669",
+      "completed_at": "2026-01-11T13:33:30.060471",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 0,
+    "failed": 1,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 0.0,
+    "avg_tests_generated": 0.0,
+    "avg_tests_passed": 0.0,
+    "avg_duration_sec": 110.52302289009094,
+    "avg_react_iterations": 1.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-11T13:31:39.531652",
+  "completed_at": "2026-01-11T13:33:30.061298",
+  "baseline_run_id": null
+}

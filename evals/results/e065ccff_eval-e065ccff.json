@@ -1,0 +1,93 @@
+{
+  "run_id": "e065ccff",
+  "run_name": "eval-e065ccff",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-vet-001",
+      "run_id": "38df144f",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "pass",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "pass",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "pass",
+              "score": 1.0,
+              "message": "Compilation successful",
+              "details": {
+                "stdout": ""
+              },
+              "duration_ms": 4034.9137783050537
+            },
+            {
+              "grader_name": "execution",
+              "result": "pass",
+              "score": 1.0,
+              "message": "All 8 tests passed",
+              "details": {
+                "tests_run": 8,
+                "tests_passed": 8,
+                "tests_failed": 0,
+                "tests_error": 0
+              },
+              "duration_ms": 4714.170217514038
+            }
+          ],
+          "tests_generated": 8,
+          "tests_passed": 8,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 3,
+          "fixes_applied": 0,
+          "duration_sec": 142.72065615653992,
+          "generated_test_code": "package org.springframework.samples.petclinic.vet;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.DisplayName;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport org.mockito.InjectMocks;\nimport org.mockito.Mock;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport static org.junit.jupiter.api.Assertions.*;\nimport static org.mockito.Mockito.*;\nimport static org.mockito.ArgumentMatchers.*;\nimport java.util.*;\nimport org.mockito.Mockito;\nimport org.springframework.data.domain.Page;\nimport org.springframework.data.domain.PageImpl;\nimport org.springframework.data.domain.PageRequest;\nimport org.springframework.data.domain.Pageable;\nimport org.springframework.ui.Model;\nimport org.springframework.web.bind.WebDataBinder;\nimport org.springframework.web.servlet.mvc.support.RedirectAttributes;\nimport org.springframework.validation.BindingResult;\n\n@ExtendWith(MockitoExtension.class)\nclass VetTest {\n\n    @InjectMocks\n    private Vet controller;\n\n    @Test\n    @DisplayName(\"should return a non-null set when specialties is null\")\n    void getSpecialtiesInternal_happyPath() {\n        var result = controller.getSpecialtiesInternal();\n\n        assertNotNull(result);\n    }\n\n    @Test\n    @DisplayName(\"should return a non-null set after adding a specialty\")\n    void getSpecialtiesInternal_edgeCase() {\n        Specialty specialty = new Specialty();\n        controller.addSpecialty(specialty);\n\n        var result = controller.getSpecialtiesInternal();\n\n        assertNotNull(result);\n    }\n\n    @Test\n    @DisplayName(\"should return sorted list of specialties\")\n    void getSpecialties_happyPath() {\n        Specialty s1 = new Specialty();\n        s1.setName(\"Cardiology\");\n        Specialty s2 = new Specialty();\n        s2.setName(\"Surgery\");\n        controller.addSpecialty(s1);\n        controller.addSpecialty(s2);\n\n        var result = controller.getSpecialties();\n\n        assertEquals(List.of(s1, s2), result);\n    }\n\n    @Test\n    @DisplayName(\"should return empty list when no specialties\")\n    void getSpecialties_edgeCase() {\n        var result = controller.getSpecialties();\n\n        assertEquals(List.of(), result);\n    }\n\n    @Test\n    @DisplayName(\"should return 1 after adding one specialty\")\n    void getNrOfSpecialties_happyPath() {\n        Specialty specialty = new Specialty();\n        controller.addSpecialty(specialty);\n\n        var result = controller.getNrOfSpecialties();\n\n        assertEquals(1, result);\n    }\n\n    @Test\n    @DisplayName(\"should return 2 after adding two specialties\")\n    void getNrOfSpecialties_edgeCase() {\n        Specialty s1 = new Specialty();\n        Specialty s2 = new Specialty();\n        controller.addSpecialty(s1);\n        controller.addSpecialty(s2);\n\n        var result = controller.getNrOfSpecialties();\n\n        assertEquals(2, result);\n    }\n\n    @Test\n    @DisplayName(\"should increase number of specialties to 1\")\n    void addSpecialty_happyPath() {\n        Specialty specialty = new Specialty();\n        controller.addSpecialty(specialty);\n\n        var result = controller.getNrOfSpecialties();\n\n        assertEquals(1, result);\n    }\n\n    @Test\n    @DisplayName(\"should not increase count when adding duplicate specialty\")\n    void addSpecialty_edgeCase() {\n        Specialty specialty = new Specialty();\n        controller.addSpecialty(specialty);\n        controller.addSpecialty(specialty);\n\n        var result = controller.getNrOfSpecialties();\n\n        assertEquals(1, result);\n    }\n\n}",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 1,
+        "pass_rate": 1.0,
+        "pass_at_1": 1.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 142.725614,
+      "started_at": "2026-01-13T20:09:07.160777",
+      "completed_at": "2026-01-13T20:11:29.886391",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 1,
+    "failed": 0,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 1.0,
+    "avg_tests_generated": 8.0,
+    "avg_tests_passed": 8.0,
+    "avg_duration_sec": 142.72065615653992,
+    "avg_react_iterations": 3.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-13T20:09:07.160762",
+  "completed_at": "2026-01-13T20:11:29.887201",
+  "baseline_run_id": null
+}

@@ -1,0 +1,98 @@
+{
+  "run_id": "e4fe0662",
+  "run_name": "eval-e4fe0662",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "anthropic/claude-3.5-haiku",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-vet-001",
+      "run_id": "f7520585",
+      "model": "anthropic/claude-3.5-haiku",
+      "model_temperature": 0.0,
+      "status": "fail",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "fail",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "fail",
+              "score": 0.0,
+              "message": "Compilation failed with 2 errors",
+              "details": {
+                "error_count": 2,
+                "error_lines": [
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetTest.java:[44,41] illegal start of expression",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetTest.java:[44,41] illegal start of expression"
+                ],
+                "stderr": ""
+              },
+              "duration_ms": 4308.973073959351
+            },
+            {
+              "grader_name": "execution",
+              "result": "pass",
+              "score": 1.0,
+              "message": "All 11 tests passed",
+              "details": {
+                "tests_run": 11,
+                "tests_passed": 11,
+                "tests_failed": 0,
+                "tests_error": 0
+              },
+              "duration_ms": 3846.0659980773926
+            }
+          ],
+          "tests_generated": 11,
+          "tests_passed": 11,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 1,
+          "fixes_applied": 0,
+          "duration_sec": 69.2688422203064,
+          "generated_test_code": "package org.springframework.samples.petclinic.vet;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport static org.mockito.Mockito.*;\n\nclass VetTest {\n\n\tprivate Vet instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new Vet();\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify that specialties set is initialized to empty HashSet when null\")\n\tvoid testGetSpecialtiesInternalInitializesEmptySetWhenNull() {\n\t\tvar result = instance.getSpecialtiesInternal();\n\t\tassertEquals(\"an empty HashSet<Specialty>\", result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify that repeated calls return the same set instance\")\n\tvoid testGetSpecialtiesInternalReturnsSameSetInstance() {\n\t\tvar result = instance.getSpecialtiesInternal();\n\t\tassertEquals(\"the same Set<Specialty> instance\", result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify that specialty can be added to internal set\")\n\tvoid testAddSpecialtyAddsToInternalSet() {\n\t\tvar result = instance.getSpecialtiesInternal(new Specialty());\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n        @DisplayName(\"Verify getSpecialties returns a sorted list of specialties\")\n        void testGetSpecialtiesSorted() {\n            var result = instance.getSpecialties();\n            assertEquals(List<Specialty>, result);\n        }\n\n\t@Test\n\t@DisplayName(\"Verify correct number of specialties is returned\")\n\tvoid testGetNrOfSpecialties() {\n\t\tvar result = instance.getSpecialties();\n\t\tassertEquals(\"int\", result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify specialty can be added to internal list\")\n\tvoid testAddSpecialty() {\n\t\tvar result = instance.getSpecialties(mock(Specialty.class));\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify method returns zero when no specialties added\")\n\tvoid testGetNrOfSpecialtiesReturnsZeroForEmptyList() {\n\t\tvar result = instance.getNrOfSpecialties();\n\t\tassertEquals(0, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify adding a specialty increases the specialty count\")\n\tvoid testAddSpecialtyIncreasesSpecialtyCount() {\n\t\tvar result = instance.getNrOfSpecialties(mock(Specialty.class));\n\t\tassertEquals(1, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify adding multiple specialties correctly tracks count\")\n\tvoid testAddMultipleSpecialties() {\n\t\tvar result = instance.getNrOfSpecialties(mock(Specialty.class), mock(Specialty.class));\n\t\tassertEquals(2, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify that a specialty can be added to a vet's specialties\")\n\tvoid testAddSpecialtyToVet() {\n\t\tinstance.addSpecialty(new Specialty());\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify multiple specialties can be added to a vet\")\n\tvoid testAddMultipleSpecialties() {\n\t\tinstance.addSpecialty(new Specialty());\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify behavior when attempting to add null specialty\")\n\tvoid testAddNullSpecialty() {\n\t\tassertThrows(NullPointerException.class, () -> {\n\t\t\tinstance.addSpecialty(null);\n\t\t});\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 69.271999,
+      "started_at": "2026-01-09T22:19:09.625911",
+      "completed_at": "2026-01-09T22:20:18.897910",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 0,
+    "failed": 1,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 0.0,
+    "avg_tests_generated": 11.0,
+    "avg_tests_passed": 11.0,
+    "avg_duration_sec": 69.2688422203064,
+    "avg_react_iterations": 1.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-09T22:19:09.625879",
+  "completed_at": "2026-01-09T22:20:18.898535",
+  "baseline_run_id": null
+}

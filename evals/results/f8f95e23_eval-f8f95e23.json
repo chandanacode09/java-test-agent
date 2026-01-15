@@ -1,0 +1,99 @@
+{
+  "run_id": "f8f95e23",
+  "run_name": "eval-f8f95e23",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-pettypeformatter-013",
+      "run_id": "ce08db0c",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "fail",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "fail",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "fail",
+              "score": 0.0,
+              "message": "Compilation failed with 20 errors",
+              "details": {
+                "error_count": 20,
+                "error_lines": [
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[52,37] cannot find symbol",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[61,37] cannot find symbol",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[69,25] cannot find symbol",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[78,37] cannot find symbol",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[88,43] no suitable method found for thenReturn(java.util.Collection<org.springframework.samples.petclinic.owner.PetType>)"
+                ],
+                "stderr": ""
+              },
+              "duration_ms": 4671.44775390625
+            },
+            {
+              "grader_name": "execution",
+              "result": "fail",
+              "score": 0.0,
+              "message": "No tests were executed",
+              "details": {
+                "stderr": "",
+                "stdout": "ava.util.Locale)\n[ERROR]   location: variable petType of type org.springframework.samples.petclinic.owner.PetType\n[ERROR] -> [Help 1]\n[ERROR] \n[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.\n[ERROR] Re-run Maven using the -X switch to enable full debug logging.\n[ERROR] \n[ERROR] For more information about the errors and possible solutions, please read the following articles:\n[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException\n"
+              },
+              "duration_ms": 4959.375858306885
+            }
+          ],
+          "tests_generated": 0,
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 1,
+          "fixes_applied": 0,
+          "duration_sec": 91.96658778190613,
+          "generated_test_code": "package org.springframework.samples.petclinic.owner;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport org.mockito.InjectMocks;\nimport org.mockito.Mock;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport static org.mockito.Mockito.*;\nimport static org.mockito.ArgumentMatchers.*;\nimport org.springframework.data.domain.Page;\nimport org.springframework.data.domain.PageRequest;\nimport org.springframework.data.domain.Pageable;\nimport static org.junit.jupiter.api.Assertions.assertThrows;\nimport java.util.Locale;\nimport static org.junit.jupiter.api.Assertions.assertEquals;\nimport org.junit.jupiter.api.Test;\nimport static org.mockito.Mockito.*;\nimport org.junit.jupiter.api.Test;\nimport java.util.List;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport org.mockito.Mock;\nimport org.mockito.InjectMocks;\nimport java.text.ParseException;\nimport java.util.Locale;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport java.util.Collection;\n\n@ExtendWith(MockitoExtension.class)\nclass PetTypeFormatterTest {\n\n\t@Mock\n\tprivate PetTypeRepository types;\n\n\t@InjectMocks\n\tprivate PetTypeFormatter controller;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\t// Mockito initializes @Mock and @InjectMocks automatically\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns the pet type name when petType has a non-null name\")\n\tvoid testPrintReturnsPetTypeName() {\n\t\tPetType petType = new PetType();\n\t\tpetType.setName(\"Dog\");\n\t\tvar result = petType.print(\"petType\", Locale.US);\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns '<null>' when petType name is null\")\n\tvoid testPrintReturnsNullWhenNameIsNull() {\n\t\tPetType petType = new PetType();\n\t\tpetType.setName(null);\n\t\tvar result = petType.print(\"petType\", Locale.US);\n\t\tassertEquals(\"<null>\", result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Throws NullPointerException when petType is null\")\n\tvoid testPrintThrowsNullPointerExceptionWhenPetTypeNull() {\n\t\tassertThrows(NullPointerException.class, () -> {\n\t\t\tinstance.print(null, Locale.US);\n\t\t});\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns pet type name regardless of locale provided\")\n\tvoid testPrintWithDifferentLocale() {\n\t\tPetType petType = new PetType();\n\t\tpetType.setName(\"Cat\");\n\t\tvar result = petType.print(\"petType\", new Locale(\"fr\", \"FR\"));\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns the PetType object when the input text matches a PetType name in the collection\")\n\tvoid testParseReturnsPetTypeWhenTextMatches() {\n\t\tPetType petType = new PetType();\n\t\tpetType.setName(\"Dog\");\n\t\tCollection<PetType> petTypes = List.of(petType);\n\t\twhen(types.findPetTypes()).thenReturn(petTypes);\n\t\tvar result = petType.parse(\"Dog\", new Locale(\"en\"));\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Throws ParseException when the input text does not match any PetType name\")\n\tvoid testParseThrowsParseExceptionWhenTextNotFound() {\n\t\tPetType petType = new PetType();\n\t\tpetType.setName(\"Bird\");\n\t\tCollection<PetType> petTypes = List.of(petType);\n\t\twhen(types.findPetTypes()).thenReturn(petTypes);\n\t\tassertThrows(ParseException.class, () -> {\n\t\t\tpetType.parse(\"Cat\", new Locale(\"en\"));\n\t\t});\n\t}\n\n\t@Test\n\t@DisplayName(\"Throws ParseException when text is null and no PetType has a null name\")\n\tvoid testParseThrowsParseExceptionWhenTextIsNull() {\n\t\tPetType petType = new PetType();\n\t\tpetType.setName(\"Fish\");\n\t\tCollection<PetType> petTypes = List.of(petType);\n\t\twhen(types.findPetTypes()).thenReturn(petTypes);\n\t\tassertThrows(ParseException.class, () -> {\n\t\t\tpetType.parse(null, new Locale(\"en\"));\n\t\t});\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 91.968467,
+      "started_at": "2026-01-11T13:02:48.335298",
+      "completed_at": "2026-01-11T13:04:20.303765",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 0,
+    "failed": 1,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 0.0,
+    "avg_tests_generated": 0.0,
+    "avg_tests_passed": 0.0,
+    "avg_duration_sec": 91.96658778190613,
+    "avg_react_iterations": 1.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-11T13:02:48.335287",
+  "completed_at": "2026-01-11T13:04:20.304026",
+  "baseline_run_id": null
+}

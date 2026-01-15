@@ -1,0 +1,99 @@
+{
+  "run_id": "b9c660ab",
+  "run_name": "eval-b9c660ab",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-pettypeformatter-013",
+      "run_id": "520a42de",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "fail",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "fail",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "fail",
+              "score": 0.0,
+              "message": "Compilation failed with 10 errors",
+              "details": {
+                "error_count": 10,
+                "error_lines": [
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[11,34] cannot find symbol",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[43,27] cannot find symbol",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[46,30] cannot find symbol",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[52,27] cannot find symbol",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[53,30] cannot find symbol"
+                ],
+                "stderr": ""
+              },
+              "duration_ms": 4518.876075744629
+            },
+            {
+              "grader_name": "execution",
+              "result": "fail",
+              "score": 0.0,
+              "message": "No tests were executed",
+              "details": {
+                "stderr": "",
+                "stdout": "53,30] cannot find symbol\n[ERROR]   symbol:   class ParseException\n[ERROR]   location: class PetTypeFormatterTest\n[ERROR] -> [Help 1]\n[ERROR] \n[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.\n[ERROR] Re-run Maven using the -X switch to enable full debug logging.\n[ERROR] \n[ERROR] For more information about the errors and possible solutions, please read the following articles:\n[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException\n"
+              },
+              "duration_ms": 4270.360708236694
+            }
+          ],
+          "tests_generated": 0,
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 1,
+          "fixes_applied": 0,
+          "duration_sec": 198.68546795845032,
+          "generated_test_code": "import static org.junit.jupiter.api.Assertions.*;\nimport static org.mockito.ArgumentMatchers.*;\nimport static org.mockito.Mockito.*;\nimport java.util.Locale;\nimport org.junit.jupiter.api.DisplayName;\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport org.mockito.InjectMocks;\nimport org.mockito.Mock;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport org.springframework.format.ParseException;\nimport org.springframework.samples.petclinic.owner.PetType;\nimport org.springframework.samples.petclinic.owner.PetTypeFormatter;\nimport org.springframework.samples.petclinic.owner.PetTypeRepository;\n\n@ExtendWith(MockitoExtension.class)\npublic class PetTypeFormatterTest {\n\n\t@Mock\n\tprivate PetTypeRepository types;\n\n\t@InjectMocks\n\tprivate PetTypeFormatter instance;\n\n\t@Test\n\t@DisplayName(\"Print returns string for given pet type and locale\")\n\tvoid testPrintHappyPath() {\n\t\tPetType petType = new PetType();\n\t\tString result = instance.print(petType, Locale.ENGLISH);\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Print throws NullPointerException for null pet type\")\n\tvoid testPrintEdgeCase() {\n\t\tassertThrows(NullPointerException.class, () -> instance.print(null, Locale.ENGLISH));\n\t}\n\n\t@Test\n\t@DisplayName(\"Parse returns pet type for valid text and locale\")\n\tvoid testParseHappyPath() {\n\t\tPetType petType = new PetType();\n\t\twhen(types.findPetTypeByName(\"Cat\")).thenReturn(petType);\n\t\tPetType result = instance.parse(\"Cat\", Locale.ENGLISH);\n\t\tassertEquals(petType, result);\n\t\tverify(types).findPetTypeByName(\"Cat\");\n\t}\n\n\t@Test\n\t@DisplayName(\"Parse throws ParseException for invalid text\")\n\tvoid testParseEdgeCase() {\n\t\twhen(types.findPetTypeByName(\"Invalid\")).thenReturn(null);\n\t\tassertThrows(ParseException.class, () -> instance.parse(\"Invalid\", Locale.ENGLISH));\n\t}\n\n}",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 198.688984,
+      "started_at": "2026-01-12T08:55:05.934024",
+      "completed_at": "2026-01-12T08:58:24.623008",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 0,
+    "failed": 1,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 0.0,
+    "avg_tests_generated": 0.0,
+    "avg_tests_passed": 0.0,
+    "avg_duration_sec": 198.68546795845032,
+    "avg_react_iterations": 1.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-12T08:55:05.934011",
+  "completed_at": "2026-01-12T08:58:24.623809",
+  "baseline_run_id": null
+}

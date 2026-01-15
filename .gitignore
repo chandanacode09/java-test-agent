@@ -45,3 +45,7 @@ surefire-reports/
 # Environment
 .env
 .env.local
+
+# Cache directories
+.llm_cache/
+.test-agent-cache/

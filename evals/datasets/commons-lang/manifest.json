@@ -1,0 +1,12 @@
+{
+  "name": "commons-lang",
+  "version": "1.0.0",
+  "description": "Apache Commons Lang utility classes evaluation dataset",
+  "project_path": "/Users/chandana/AI-Agents/commons-lang",
+  "cases": {
+    "l3": ["l3_utils.json"]
+  },
+  "baseline_model": "x-ai/grok-code-fast-1",
+  "expected_overall_pass_rate": 0.6,
+  "baselines": {}
+}

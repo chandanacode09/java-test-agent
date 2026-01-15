@@ -1,0 +1,992 @@
+{
+  "run_id": "f67e3fec",
+  "run_name": "eval-f67e3fec",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-vet-001",
+      "run_id": "5de4f228",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "pass",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "pass",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "pass",
+              "score": 1.0,
+              "message": "Compilation successful",
+              "details": {
+                "stdout": ""
+              },
+              "duration_ms": 5030.557870864868
+            },
+            {
+              "grader_name": "execution",
+              "result": "pass",
+              "score": 1.0,
+              "message": "All 3 tests passed",
+              "details": {
+                "tests_run": 3,
+                "tests_passed": 3,
+                "tests_failed": 0,
+                "tests_error": 0
+              },
+              "duration_ms": 4597.002983093262
+            }
+          ],
+          "tests_generated": 3,
+          "tests_passed": 3,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 2,
+          "fixes_applied": 0,
+          "duration_sec": 78.56712818145752,
+          "generated_test_code": "package org.springframework.samples.petclinic.vet;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.springframework.samples.petclinic.vet.Specialty;\nimport java.util.stream.Collectors;\nimport org.springframework.samples.petclinic.vet.Vet;\nimport java.util.List;\nimport java.util.Comparator;\n\nclass VetTest {\n\n\tprivate Vet instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new Vet();\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns a sorted list of specialties by name when vet has multiple specialties\")\n\tvoid testGetSpecialtiesReturnsSortedList() {\n\t\tVet vet = new Vet();\n\t\tSpecialty cardio = new Specialty();\n\t\tcardio.setName(\"Cardiology\");\n\t\tSpecialty surgery = new Specialty();\n\t\tsurgery.setName(\"Surgery\");\n\t\tvet.addSpecialty(surgery);\n\t\tvet.addSpecialty(cardio);\n\t\tvar result = vet.getSpecialties();\n\t\tassertEquals(List.of(cardio, surgery), result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns an empty list when vet has no specialties\")\n\tvoid testGetSpecialtiesReturnsEmptyListWhenNoSpecialties() {\n\t\tVet vet = new Vet();\n\t\tvar result = instance.getSpecialties();\n\t\tassertEquals(List.of(), result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns a list with a single specialty when vet has one specialty\")\n\tvoid testGetSpecialtiesReturnsSingleSpecialty() {\n\t\tVet vet = new Vet();\n\t\tSpecialty specialty = new Specialty();\n\t\tspecialty.setName(\"Radiology\");\n\t\tvet.addSpecialty(specialty);\n\t\tvar result = vet.getSpecialties();\n\t\tassertEquals(List.of(specialty), result);\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 1,
+        "pass_rate": 1.0,
+        "pass_at_1": 1.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 78.570879,
+      "started_at": "2026-01-11T15:17:16.417855",
+      "completed_at": "2026-01-11T15:18:34.988734",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    },
+    {
+      "eval_case_id": "petclinic-pet-002",
+      "run_id": "5f38ffa5",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "pass",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "pass",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "pass",
+              "score": 1.0,
+              "message": "Compilation successful",
+              "details": {
+                "stdout": ""
+              },
+              "duration_ms": 3645.0207233428955
+            },
+            {
+              "grader_name": "execution",
+              "result": "pass",
+              "score": 1.0,
+              "message": "All 7 tests passed",
+              "details": {
+                "tests_run": 7,
+                "tests_passed": 7,
+                "tests_failed": 0,
+                "tests_error": 0
+              },
+              "duration_ms": 4481.091260910034
+            }
+          ],
+          "tests_generated": 7,
+          "tests_passed": 7,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 1,
+          "fixes_applied": 0,
+          "duration_sec": 66.1186420917511,
+          "generated_test_code": "package org.springframework.samples.petclinic.owner;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport java.time.LocalDate;\nimport org.springframework.samples.petclinic.owner.Pet;\n\nclass PetTest {\n\n\tprivate Pet instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new Pet();\n\t}\n\n\t@Test\n\t@DisplayName(\"Sets the birthDate to a valid LocalDate\")\n\tvoid testSetBirthDateWithValidDate() {\n\t\tPet pet = new Pet();\n\t\tinstance.setBirthDate(LocalDate.of(2020, 5, 15));\n\t}\n\n\t@Test\n\t@DisplayName(\"Sets the birthDate to another valid LocalDate\")\n\tvoid testSetBirthDateWithAnotherValidDate() {\n\t\tPet pet = new Pet();\n\t\tinstance.setBirthDate(LocalDate.of(2023, 12, 31));\n\t}\n\n\t@Test\n\t@DisplayName(\"Sets the birthDate to null\")\n\tvoid testSetBirthDateWithNull() {\n\t\tPet pet = new Pet();\n\t\tinstance.setBirthDate(null);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getBirthDate returns the LocalDate that was set using setBirthDate\")\n\tvoid testGetBirthDateReturnsSetDate() {\n\t\tPet pet = new Pet();\n\t\tLocalDate birthDate = LocalDate.of(2023, 5, 15);\n\t\tpet.setBirthDate(birthDate);\n\t\tvar result = pet.getBirthDate();\n\t\tassertEquals(LocalDate.of(2023, 5, 15), result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getBirthDate returns null if birthDate is not set\")\n\tvoid testGetBirthDateReturnsNullWhenNotSet() {\n\t\tPet pet = new Pet();\n\t\tpet.setName(\"Fluffy\");\n\t\tpet.setBirthDate(null);\n\t\tvar result = pet.getBirthDate();\n\t\tassertEquals(null, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getBirthDate correctly returns a past date\")\n\tvoid testGetBirthDateReturnsPastDate() {\n\t\tPet pet = new Pet();\n\t\tLocalDate pastDate = LocalDate.of(2000, 1, 1);\n\t\tpet.setBirthDate(pastDate);\n\t\tvar result = pet.getBirthDate();\n\t\tassertEquals(LocalDate.of(2000, 1, 1), result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getBirthDate correctly returns a future date\")\n\tvoid testGetBirthDateReturnsFutureDate() {\n\t\tPet pet = new Pet();\n\t\tLocalDate futureDate = LocalDate.of(2050, 12, 31);\n\t\tpet.setBirthDate(futureDate);\n\t\tvar result = pet.getBirthDate();\n\t\tassertEquals(LocalDate.of(2050, 12, 31), result);\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 1,
+        "pass_rate": 1.0,
+        "pass_at_1": 1.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 66.122917,
+      "started_at": "2026-01-11T15:18:34.989551",
+      "completed_at": "2026-01-11T15:19:41.112468",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    },
+    {
+      "eval_case_id": "petclinic-owner-003",
+      "run_id": "812ba315",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "pass",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "pass",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "pass",
+              "score": 1.0,
+              "message": "Compilation successful",
+              "details": {
+                "stdout": ""
+              },
+              "duration_ms": 3922.628879547119
+            },
+            {
+              "grader_name": "execution",
+              "result": "pass",
+              "score": 1.0,
+              "message": "All 7 tests passed",
+              "details": {
+                "tests_run": 7,
+                "tests_passed": 7,
+                "tests_failed": 0,
+                "tests_error": 0
+              },
+              "duration_ms": 4370.222091674805
+            }
+          ],
+          "tests_generated": 7,
+          "tests_passed": 7,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 2,
+          "fixes_applied": 0,
+          "duration_sec": 62.31914973258972,
+          "generated_test_code": "package org.springframework.samples.petclinic.owner;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.springframework.samples.petclinic.owner.Owner;\nimport static org.junit.jupiter.api.Assertions.assertEquals;\nimport org.junit.jupiter.api.Test;\nimport org.springframework.samples.petclinic.owner.Owner;\n\nclass OwnerTest {\n\n\tprivate Owner instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new Owner();\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify that getAddress returns the address that was set using setAddress\")\n\tvoid testGetAddressReturnsSetAddress() {\n\t\tOwner owner = new Owner();\n\t\towner.setAddress(\"123 Main St\");\n\t\tvar result = owner.getAddress();\n\t\tassertEquals(\"123 Main St\", result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify that getAddress returns an empty string when address is set to empty\")\n\tvoid testGetAddressReturnsEmptyString() {\n\t\tOwner owner = new Owner();\n\t\towner.setAddress(\"\");\n\t\tvar result = owner.getAddress();\n\t\tassertEquals(\"\", result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify that getAddress returns null when address is set to null\")\n\tvoid testGetAddressReturnsNull() {\n\t\tOwner owner = new Owner();\n\t\towner.setAddress(null);\n\t\tvar result = owner.getAddress();\n\t\tassertNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify that getAddress returns null on a newly created Owner with no address set\")\n\tvoid testGetAddressOnNewOwner() {\n\t\tOwner owner = new Owner();\n\t\tvar result = instance.getAddress();\n\t\tassertNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setAddress correctly sets a valid string address\")\n\tvoid testSetAddressHappyPath() {\n\t\tOwner owner = new Owner();\n\t\tinstance.setAddress(\"123 Main St\");\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setAddress handles null input without throwing exception\")\n\tvoid testSetAddressWithNull() {\n\t\tOwner owner = new Owner();\n\t\tinstance.setAddress(null);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setAddress correctly sets an empty string\")\n\tvoid testSetAddressWithEmptyString() {\n\t\tOwner owner = new Owner();\n\t\tinstance.setAddress(\"\");\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 1,
+        "pass_rate": 1.0,
+        "pass_at_1": 1.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 62.323793,
+      "started_at": "2026-01-11T15:19:41.113292",
+      "completed_at": "2026-01-11T15:20:43.437085",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    },
+    {
+      "eval_case_id": "petclinic-visit-004",
+      "run_id": "55ca8d9a",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "pass",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "pass",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "pass",
+              "score": 1.0,
+              "message": "Compilation successful",
+              "details": {
+                "stdout": ""
+              },
+              "duration_ms": 3641.3750648498535
+            },
+            {
+              "grader_name": "execution",
+              "result": "pass",
+              "score": 1.0,
+              "message": "All 7 tests passed",
+              "details": {
+                "tests_run": 7,
+                "tests_passed": 7,
+                "tests_failed": 0,
+                "tests_error": 0
+              },
+              "duration_ms": 4408.173084259033
+            }
+          ],
+          "tests_generated": 7,
+          "tests_passed": 7,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 2,
+          "fixes_applied": 0,
+          "duration_sec": 59.19588088989258,
+          "generated_test_code": "package org.springframework.samples.petclinic.owner;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.springframework.samples.petclinic.owner.Visit;\nimport org.junit.jupiter.api.Test;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport static org.junit.jupiter.api.Assertions.assertEquals;\nimport org.junit.jupiter.api.Test;\nimport java.time.LocalDate;\n\nclass VisitTest {\n\n\tprivate Visit instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new Visit();\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getDate returns the LocalDate value set via setDate\")\n\tvoid testGetDateReturnsSetValue() {\n\t\tVisit visit = new Visit();\n\t\tvisit.setDate(LocalDate.of(2023, 10, 15));\n\t\tvar result = visit.getDate();\n\t\tassertEquals(LocalDate.of(2023, 10, 15), result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getDate returns null when no date has been set\")\n\tvoid testGetDateReturnsNullWhenNotSet() {\n\t\tVisit visit = new Visit();\n\t\tvar result = instance.getDate();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getDate returns null after explicitly setting the date to null\")\n\tvoid testGetDateReturnsNullAfterSettingNull() {\n\t\tVisit visit = new Visit();\n\t\tvisit.setDate(null);\n\t\tvar result = visit.getDate();\n\t\tassertNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getDate returns the boundary value (earliest date)\")\n\tvoid testGetDateReturnsBoundaryDate() {\n\t\tVisit visit = new Visit();\n\t\tvisit.setDate(LocalDate.of(1900, 1, 1));\n\t\tvar result = visit.getDate();\n\t\tassertEquals(LocalDate.of(1900, 1, 1), result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setDate correctly sets the date field to a valid LocalDate value\")\n\tvoid testSetDateWithValidDate() {\n\t\tVisit visit = new Visit();\n\t\tinstance.setDate(LocalDate.of(2020, 5, 15));\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setDate handles null input by setting the date field to null\")\n\tvoid testSetDateWithNull() {\n\t\tVisit visit = new Visit();\n\t\tinstance.setDate(null);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setDate correctly sets the date field to an extreme date value like year 1900\")\n\tvoid testSetDateWithBoundaryDate() {\n\t\tVisit visit = new Visit();\n\t\tinstance.setDate(LocalDate.of(1900, 1, 1));\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 1,
+        "pass_rate": 1.0,
+        "pass_at_1": 1.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 59.199909,
+      "started_at": "2026-01-11T15:20:43.437918",
+      "completed_at": "2026-01-11T15:21:42.637827",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    },
+    {
+      "eval_case_id": "petclinic-pettype-005",
+      "run_id": "83696c87",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "skipped",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "skipped",
+          "grader_outputs": [],
+          "tests_generated": 0,
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 0,
+          "fixes_applied": 0,
+          "duration_sec": 0.025068044662475586,
+          "generated_test_code": "# Skipped: class has no methods to test",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 0.025607,
+      "started_at": "2026-01-11T15:21:42.638641",
+      "completed_at": "2026-01-11T15:21:42.664248",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    },
+    {
+      "eval_case_id": "petclinic-specialty-006",
+      "run_id": "0eaf14b4",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "skipped",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "skipped",
+          "grader_outputs": [],
+          "tests_generated": 0,
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 0,
+          "fixes_applied": 0,
+          "duration_sec": 0.02231287956237793,
+          "generated_test_code": "# Skipped: class has no methods to test",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 0.022469,
+      "started_at": "2026-01-11T15:21:42.664295",
+      "completed_at": "2026-01-11T15:21:42.686764",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    },
+    {
+      "eval_case_id": "petclinic-vets-007",
+      "run_id": "61f26cd9",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "pass",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "pass",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "pass",
+              "score": 1.0,
+              "message": "Compilation successful",
+              "details": {
+                "stdout": ""
+              },
+              "duration_ms": 3701.846122741699
+            },
+            {
+              "grader_name": "execution",
+              "result": "pass",
+              "score": 1.0,
+              "message": "All 2 tests passed",
+              "details": {
+                "tests_run": 2,
+                "tests_passed": 2,
+                "tests_failed": 0,
+                "tests_error": 0
+              },
+              "duration_ms": 4294.503927230835
+            }
+          ],
+          "tests_generated": 2,
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 1,
+          "fixes_applied": 0,
+          "duration_sec": 34.3610360622406,
+          "generated_test_code": "package org.springframework.samples.petclinic.vet;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.springframework.samples.petclinic.vet.Vets;\nimport java.util.List;\nimport java.util.ArrayList;\nimport org.springframework.samples.petclinic.vet.Vet;\n\nclass VetsTest {\n\n\tprivate Vets instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new Vets();\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns the same list instance on multiple calls\")\n\tvoid testGetVetListReturnsSameListInstance() {\n\t\tVets vetsObj = new Vets();\n\t\tList<Vet> firstCall = vetsObj.getVetList();\n\t\tfirstCall.add(new Vet());\n\t\tvar result = vetsObj.getVetList();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns the modified list after adding elements\")\n\tvoid testGetVetListAfterModification() {\n\t\tVets vetsObj = new Vets();\n\t\tList<Vet> vetList = vetsObj.getVetList();\n\t\tVet vet = new Vet();\n\t\tvet.setFirstName(\"John\");\n\t\tvetList.add(vet);\n\t\tvar result = vetsObj.getVetList();\n\t\tassertEquals(List.of(vet), result);\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 1,
+        "pass_rate": 1.0,
+        "pass_at_1": 1.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 34.364741,
+      "started_at": "2026-01-11T15:21:42.686797",
+      "completed_at": "2026-01-11T15:22:17.051538",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    },
+    {
+      "eval_case_id": "petclinic-baseentity-008",
+      "run_id": "41d8f195",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "pass",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "pass",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "pass",
+              "score": 1.0,
+              "message": "Compilation successful",
+              "details": {
+                "stdout": ""
+              },
+              "duration_ms": 3581.732988357544
+            },
+            {
+              "grader_name": "execution",
+              "result": "pass",
+              "score": 1.0,
+              "message": "All 7 tests passed",
+              "details": {
+                "tests_run": 7,
+                "tests_passed": 7,
+                "tests_failed": 0,
+                "tests_error": 0
+              },
+              "duration_ms": 4359.138011932373
+            }
+          ],
+          "tests_generated": 7,
+          "tests_passed": 7,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 2,
+          "fixes_applied": 0,
+          "duration_sec": 61.60333323478699,
+          "generated_test_code": "package org.springframework.samples.petclinic.model;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.springframework.samples.petclinic.model.BaseEntity;\nimport static org.junit.jupiter.api.Assertions.assertEquals;\nimport org.junit.jupiter.api.Test;\nimport org.springframework.samples.petclinic.model.BaseEntity;\n\nclass BaseEntityTest {\n\n\tprivate BaseEntity instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new BaseEntity();\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns the id value when it has been set\")\n\tvoid testGetIdReturnsSetValue() {\n\t\tBaseEntity entity = new BaseEntity();\n\t\tentity.setId(1);\n\t\tvar result = entity.getId();\n\t\tassertEquals(1, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns null when id has not been set\")\n\tvoid testGetIdReturnsNullWhenNotSet() {\n\t\tBaseEntity entity = new BaseEntity();\n\t\tvar result = instance.getId();\n\t\tassertNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns null when id is explicitly set to null\")\n\tvoid testGetIdReturnsNullAfterSetToNull() {\n\t\tBaseEntity entity = new BaseEntity();\n\t\tentity.setId(null);\n\t\tvar result = entity.getId();\n\t\tassertNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setting a valid positive id allows retrieving it via getId\")\n\tvoid testSetIdWithValidId() {\n\t\tinstance.setId(1);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setting id to null results in isNew returning true\")\n\tvoid testSetIdWithNull() {\n\t\tinstance.setId(null);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setting id to zero allows retrieving it and isNew returns false\")\n\tvoid testSetIdWithZero() {\n\t\tinstance.setId(0);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setting id to a negative value allows retrieving it and isNew returns false\")\n\tvoid testSetIdWithNegative() {\n\t\tinstance.setId(-1);\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 1,
+        "pass_rate": 1.0,
+        "pass_at_1": 1.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 61.605114,
+      "started_at": "2026-01-11T15:22:17.052370",
+      "completed_at": "2026-01-11T15:23:18.657484",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    },
+    {
+      "eval_case_id": "petclinic-namedentity-009",
+      "run_id": "80952051",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "pass",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "pass",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "pass",
+              "score": 1.0,
+              "message": "Compilation successful",
+              "details": {
+                "stdout": ""
+              },
+              "duration_ms": 3672.960042953491
+            },
+            {
+              "grader_name": "execution",
+              "result": "pass",
+              "score": 1.0,
+              "message": "All 7 tests passed",
+              "details": {
+                "tests_run": 7,
+                "tests_passed": 7,
+                "tests_failed": 0,
+                "tests_error": 0
+              },
+              "duration_ms": 4673.970937728882
+            }
+          ],
+          "tests_generated": 7,
+          "tests_passed": 7,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 2,
+          "fixes_applied": 0,
+          "duration_sec": 65.9065580368042,
+          "generated_test_code": "package org.springframework.samples.petclinic.model;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport org.springframework.samples.petclinic.model.NamedEntity;\nimport static org.junit.jupiter.api.Assertions.*;\n\nclass NamedEntityTest {\n\n\tprivate NamedEntity instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new NamedEntity();\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns the name that was set on a NamedEntity instance\")\n\tvoid testGetNameReturnsSetName() {\n\t\tNamedEntity namedEntity = new NamedEntity();\n\t\tnamedEntity.setName(\"Dog\");\n\t\tvar result = namedEntity.getName();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns null when no name is set (field is null)\")\n\tvoid testGetNameReturnsNullWhenNameNotSet() {\n\t\tNamedEntity namedEntity = new NamedEntity();\n\t\tvar result = instance.getName();\n\t\tassertNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns an empty string when name is explicitly set to empty\")\n\tvoid testGetNameReturnsEmptyStringWhenSetToEmpty() {\n\t\tNamedEntity namedEntity = new NamedEntity();\n\t\tnamedEntity.setName(\"\");\n\t\tvar result = namedEntity.getName();\n\t\tassertEquals(\"\", result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Sets a valid non-null string name and verifies that getName() returns the set value\")\n\tvoid testSetNameWithValidString() {\n\t\tNamedEntity namedEntity = new NamedEntity();\n\t\tinstance.setName(\"Fluffy\");\n\t}\n\n\t@Test\n\t@DisplayName(\"Sets name to null and verifies that getName() returns null and toString() returns '<null>'\")\n\tvoid testSetNameWithNull() {\n\t\tNamedEntity namedEntity = new NamedEntity();\n\t\tinstance.setName(null);\n\t}\n\n\t@Test\n\t@DisplayName(\"Sets name to an empty string and verifies that getName() returns an empty string and toString() returns an empty string\")\n\tvoid testSetNameWithEmptyString() {\n\t\tNamedEntity namedEntity = new NamedEntity();\n\t\tinstance.setName(\"\");\n\t}\n\n\t@Test\n\t@DisplayName(\"Sets name to one value, then sets it to another, verifying that the latest value is retained via getName()\")\n\tvoid testSetNameOverwritesPreviousValue() {\n\t\tNamedEntity namedEntity = new NamedEntity();\n\t\tinstance.setName(\"NewName\");\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 1,
+        "pass_rate": 1.0,
+        "pass_at_1": 1.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 65.90968,
+      "started_at": "2026-01-11T15:23:18.658151",
+      "completed_at": "2026-01-11T15:24:24.567831",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    },
+    {
+      "eval_case_id": "petclinic-person-010",
+      "run_id": "0f81e89e",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "pass",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "pass",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "pass",
+              "score": 1.0,
+              "message": "Compilation successful",
+              "details": {
+                "stdout": ""
+              },
+              "duration_ms": 3812.2968673706055
+            },
+            {
+              "grader_name": "execution",
+              "result": "pass",
+              "score": 1.0,
+              "message": "All 6 tests passed",
+              "details": {
+                "tests_run": 6,
+                "tests_passed": 6,
+                "tests_failed": 0,
+                "tests_error": 0
+              },
+              "duration_ms": 4451.335906982422
+            }
+          ],
+          "tests_generated": 6,
+          "tests_passed": 6,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 2,
+          "fixes_applied": 0,
+          "duration_sec": 49.53559494018555,
+          "generated_test_code": "package org.springframework.samples.petclinic.model;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport static org.junit.jupiter.api.Assertions.assertEquals;\nimport org.junit.jupiter.api.Test;\nimport org.springframework.samples.petclinic.model.Person;\n\nclass PersonTest {\n\n\tprivate Person instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new Person();\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getFirstName returns the first name when it is set\")\n\tvoid testGetFirstNameReturnsSetValue() {\n\t\tPerson person = new Person();\n\t\tperson.setFirstName(\"John\");\n\t\tvar result = person.getFirstName();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getFirstName returns null when first name has not been set\")\n\tvoid testGetFirstNameReturnsNullWhenNotSet() {\n\t\tPerson person = new Person();\n\t\tvar result = instance.getFirstName();\n\t\tassertNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getFirstName returns an empty string when set to empty\")\n\tvoid testGetFirstNameReturnsEmptyString() {\n\t\tPerson person = new Person();\n\t\tperson.setFirstName(\"\");\n\t\tvar result = person.getFirstName();\n\t\tassertEquals(\"\", result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Sets the first name to a valid string value and verifies it via getter\")\n\tvoid testSetFirstNameWithValidString() {\n\t\tPerson person = new Person();\n\t\tinstance.setFirstName(\"John\");\n\t}\n\n\t@Test\n\t@DisplayName(\"Sets the first name to null and verifies it via getter\")\n\tvoid testSetFirstNameWithNull() {\n\t\tPerson person = new Person();\n\t\tinstance.setFirstName(null);\n\t}\n\n\t@Test\n\t@DisplayName(\"Sets the first name to an empty string and verifies it via getter\")\n\tvoid testSetFirstNameWithEmptyString() {\n\t\tPerson person = new Person();\n\t\tinstance.setFirstName(\"\");\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 1,
+        "pass_rate": 1.0,
+        "pass_at_1": 1.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 49.539808,
+      "started_at": "2026-01-11T15:24:24.568641",
+      "completed_at": "2026-01-11T15:25:14.108449",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    },
+    {
+      "eval_case_id": "petclinic-vetcontroller-011",
+      "run_id": "c552e4d5",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "pass",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "pass",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "pass",
+              "score": 1.0,
+              "message": "Compilation successful",
+              "details": {
+                "stdout": ""
+              },
+              "duration_ms": 3580.622911453247
+            },
+            {
+              "grader_name": "execution",
+              "result": "pass",
+              "score": 1.0,
+              "message": "All 4 tests passed",
+              "details": {
+                "tests_run": 4,
+                "tests_passed": 4,
+                "tests_failed": 0,
+                "tests_error": 0
+              },
+              "duration_ms": 5412.686109542847
+            }
+          ],
+          "tests_generated": 4,
+          "tests_passed": 4,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 1,
+          "fixes_applied": 0,
+          "duration_sec": 43.18535399436951,
+          "generated_test_code": "package org.springframework.samples.petclinic.vet;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport org.mockito.InjectMocks;\nimport org.mockito.Mock;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport static org.mockito.Mockito.*;\nimport static org.mockito.ArgumentMatchers.*;\nimport org.springframework.data.domain.Page;\nimport org.springframework.data.domain.PageRequest;\nimport org.springframework.data.domain.Pageable;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport org.springframework.samples.petclinic.vet.VetController;\nimport org.springframework.samples.petclinic.vet.Vets;\nimport org.springframework.samples.petclinic.vet.Vet;\nimport static org.mockito.Mockito.*;\nimport java.util.List;\nimport org.mockito.Mock;\nimport org.mockito.InjectMocks;\nimport org.springframework.data.domain.Page;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport org.springframework.samples.petclinic.vet.VetController;\nimport org.springframework.samples.petclinic.vet.Vet;\nimport static org.mockito.Mockito.*;\nimport org.junit.jupiter.api.Test;\nimport static org.mockito.ArgumentMatchers.*;\nimport org.mockito.Mock;\nimport org.mockito.InjectMocks;\nimport java.util.List;\nimport org.springframework.ui.Model;\nimport org.springframework.samples.petclinic.vet.VetRepository;\nimport org.springframework.data.domain.Pageable;\nimport org.junit.jupiter.api.BeforeEach;\n\n@ExtendWith(MockitoExtension.class)\nclass VetControllerTest {\n\n\t@Mock\n\tprivate VetRepository vetRepository;\n\n\t@InjectMocks\n\tprivate VetController controller;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\t// Mockito initializes @Mock and @InjectMocks automatically\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns view name and populates model with pagination data for valid page\")\n\tvoid testShowVetListWithValidPage() {\n\t\tVet vet = new Vet();\n\t\t;\n\t\tvet.setFirstName(\"John\");\n\t\t;\n\t\tvet.setLastName(\"Doe\");\n\t\t;\n\t\tList<Vet> vetList = List.of(vet);\n\t\t;\n\t\tPage<Vet> mockPage = mock(Page.class);\n\t\t;\n\t\twhen(mockPage.getContent()).thenReturn(vetList);\n\t\t;\n\t\twhen(mockPage.getTotalPages()).thenReturn(10);\n\t\t;\n\t\twhen(mockPage.getTotalElements()).thenReturn(50L);\n\t\t;\n\t\twhen(mockPage.toList()).thenReturn(vetList);\n\t\t;\n\t\twhen(vetRepository.findAll(any(Pageable.class))).thenReturn(mockPage);\n\t\t;\n\t\tvar result = controller.showVetList(1, mock(Model.class));\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns view name even when there are no vets in the paginated result\")\n\tvoid testShowVetListWithEmptyPage() {\n\t\tList<Vet> emptyList = List.of();\n\t\t;\n\t\tPage<Vet> mockPage = mock(Page.class);\n\t\t;\n\t\twhen(mockPage.getContent()).thenReturn(emptyList);\n\t\t;\n\t\twhen(mockPage.getTotalPages()).thenReturn(0);\n\t\t;\n\t\twhen(mockPage.getTotalElements()).thenReturn(0L);\n\t\t;\n\t\twhen(mockPage.toList()).thenReturn(emptyList);\n\t\t;\n\t\twhen(vetRepository.findAll(any(Pageable.class))).thenReturn(mockPage);\n\t\t;\n\t\tvar result = controller.showVetList(1, mock(Model.class));\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Handles large page number by returning view name with appropriate pagination\")\n\tvoid testShowVetListWithLargePageNumber() {\n\t\tList<Vet> emptyList = List.of();\n\t\t;\n\t\tPage<Vet> mockPage = mock(Page.class);\n\t\t;\n\t\twhen(mockPage.getContent()).thenReturn(emptyList);\n\t\t;\n\t\twhen(mockPage.getTotalPages()).thenReturn(10);\n\t\t;\n\t\twhen(mockPage.getTotalElements()).thenReturn(50L);\n\t\t;\n\t\twhen(mockPage.toList()).thenReturn(emptyList);\n\t\t;\n\t\twhen(vetRepository.findAll(any(Pageable.class))).thenReturn(mockPage);\n\t\t;\n\t\tvar result = controller.showVetList(1000, mock(Model.class));\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Throws exception when page number leads to invalid PageRequest\")\n\tvoid testShowVetListWithInvalidPage() {\n\t\tassertThrows(IllegalArgumentException.class, () -> {\n\t\t\tcontroller.showVetList(0, mock(Model.class));\n\t\t});\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 1,
+        "pass_rate": 1.0,
+        "pass_at_1": 1.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 43.189534,
+      "started_at": "2026-01-11T15:25:14.109268",
+      "completed_at": "2026-01-11T15:25:57.298802",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    },
+    {
+      "eval_case_id": "petclinic-petvalidator-012",
+      "run_id": "a032f3f8",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "pass",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "pass",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "pass",
+              "score": 1.0,
+              "message": "Compilation successful",
+              "details": {
+                "stdout": ""
+              },
+              "duration_ms": 5523.6451625823975
+            },
+            {
+              "grader_name": "execution",
+              "result": "pass",
+              "score": 1.0,
+              "message": "All 7 tests passed",
+              "details": {
+                "tests_run": 7,
+                "tests_passed": 7,
+                "tests_failed": 0,
+                "tests_error": 0
+              },
+              "duration_ms": 6789.17384147644
+            }
+          ],
+          "tests_generated": 7,
+          "tests_passed": 7,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 4,
+          "fixes_applied": 0,
+          "duration_sec": 228.1255238056183,
+          "generated_test_code": "package org.springframework.samples.petclinic.owner;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.springframework.samples.petclinic.owner.Owner;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport org.springframework.samples.petclinic.owner.Pet;\nimport org.springframework.samples.petclinic.owner.PetValidator;\nimport org.springframework.validation.Errors;\nimport org.mockito.MockitoAnnotations;\nimport static org.mockito.Mockito.*;\nimport org.springframework.samples.petclinic.owner.PetType;\nimport org.junit.jupiter.api.Test;\nimport org.mockito.Mock;\nimport org.springframework.samples.petclinic.owner.Pet;\nimport org.junit.jupiter.api.BeforeEach;\n\nclass PetValidatorTest {\n\n\tprivate PetValidator instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new PetValidator();\n\t}\n\n\t@Test\n\t@DisplayName(\"Validates a Pet with all required fields populated and no errors added to Errors\")\n\tvoid testValidatePetHappyPath() {\n\t\tPet pet = new Pet();\n\t\tpet.setName(\"Fluffy\");\n\t\tinstance.validate(pet, mock(Errors.class));\n\t}\n\n\t@Test\n\t@DisplayName(\"Validates a Pet with null name and expects rejectValue called for 'name' with REQUIRED\")\n\tvoid testValidatePetNullName() {\n\t\tPet pet = new Pet();\n\t\tpet.setName(null);\n\t\tinstance.validate(pet, mock(Errors.class));\n\t}\n\n\t@Test\n\t@DisplayName(\"Validates a new Pet with null type and expects rejectValue called for 'type' with REQUIRED\")\n\tvoid testValidatePetNewWithNullType() {\n\t\tErrors errors = mock(Errors.class);\n\t\tPet pet = new Pet();\n\t\tpet.setName(\"TestPet\"); // Set required fields to non-null valid values\n\t\tpet.setBirthDate(LocalDate.now());\n\t\tpet.setType(null);\n\t\tinstance.validate(pet, errors);\n\t\tverify(errors).rejectValue(eq(\"type\"), eq(\"required\"), eq(\"required\"));\n\t}\n\n\t@Test\n\t@DisplayName(\"Validates a Pet with null birthDate and expects rejectValue called for 'birthDate' with REQUIRED\")\n\tvoid testValidatePetNullBirthDate() {\n\t\tPet pet = new Pet();\n\t\tErrors errors = mock(Errors.class);\n\t\tinstance.validate(pet, errors);\n\t\tverify(errors).rejectValue(\"birthDate\", \"required\", \"required\");\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that supports returns true when clazz is Pet.class\")\n\tvoid testSupportsReturnsTrueForPetClass() {\n\t\tvar result = instance.supports(org.springframework.samples.petclinic.owner.Pet.class);\n\t\tassertEquals(true, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that supports returns false when clazz is not assignable from Pet, such as Owner.class\")\n\tvoid testSupportsReturnsFalseForNonAssignableClass() {\n\t\tvar result = instance.supports(org.springframework.samples.petclinic.owner.Owner.class);\n\t\tassertEquals(false, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that supports throws NullPointerException when clazz is null\")\n\tvoid testSupportsThrowsExceptionForNullClass() {\n\t\tassertThrows(NullPointerException.class, () -> {\n\t\t\tinstance.supports(null);\n\t\t});\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 1,
+        "pass_rate": 1.0,
+        "pass_at_1": 1.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 228.129632,
+      "started_at": "2026-01-11T15:25:57.299627",
+      "completed_at": "2026-01-11T15:29:45.429259",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    },
+    {
+      "eval_case_id": "petclinic-pettypeformatter-013",
+      "run_id": "5c76e2ce",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "fail",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "fail",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "fail",
+              "score": 0.0,
+              "message": "Compilation failed with 8 errors",
+              "details": {
+                "error_count": 8,
+                "error_lines": [
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[79,22] cannot find symbol",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[87,22] cannot find symbol",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[98,22] cannot find symbol",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[113,22] cannot find symbol",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTest.java:[79,22] cannot find symbol"
+                ],
+                "stderr": ""
+              },
+              "duration_ms": 4684.67903137207
+            },
+            {
+              "grader_name": "execution",
+              "result": "fail",
+              "score": 0.0,
+              "message": "No tests were executed",
+              "details": {
+                "stderr": "",
+                "stdout": "able petTypeRepository\n[ERROR]   location: class org.springframework.samples.petclinic.owner.PetTypeFormatterTest\n[ERROR] -> [Help 1]\n[ERROR] \n[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.\n[ERROR] Re-run Maven using the -X switch to enable full debug logging.\n[ERROR] \n[ERROR] For more information about the errors and possible solutions, please read the following articles:\n[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException\n"
+              },
+              "duration_ms": 4636.146068572998
+            }
+          ],
+          "tests_generated": 0,
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 1,
+          "fixes_applied": 0,
+          "duration_sec": 80.3097276687622,
+          "generated_test_code": "package org.springframework.samples.petclinic.owner;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport org.mockito.InjectMocks;\nimport org.mockito.Mock;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport static org.mockito.Mockito.*;\nimport static org.mockito.ArgumentMatchers.*;\nimport org.springframework.data.domain.Page;\nimport org.springframework.data.domain.PageRequest;\nimport org.springframework.data.domain.Pageable;\nimport java.util.Locale;\nimport org.springframework.samples.petclinic.owner.PetType;\nimport org.springframework.samples.petclinic.owner.PetTypeFormatter;\nimport org.springframework.samples.petclinic.owner.PetTypeFormatter;\nimport java.text.ParseException;\nimport static org.junit.jupiter.api.Assertions.assertEquals;\nimport static org.junit.jupiter.api.Assertions.assertThrows;\nimport static org.mockito.Mockito.when;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport java.util.Locale;\nimport org.junit.jupiter.api.Test;\nimport org.springframework.samples.petclinic.owner.PetType;\nimport org.mockito.Mock;\nimport org.mockito.Mockito;\nimport java.util.List;\n\n@ExtendWith(MockitoExtension.class)\nclass PetTypeFormatterTest {\n\n\t@Mock\n\tprivate PetTypeRepository types;\n\n\t@InjectMocks\n\tprivate PetTypeFormatter controller;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\t// Mockito initializes @Mock and @InjectMocks automatically\n\t}\n\n\t@Test\n\t@DisplayName(\"Tests that print returns the name of the pet type when it has a name\")\n\tvoid testPrintReturnsPetTypeName() {\n\t\tPetType petType = new PetType();\n\t\tpetType.setName(\"Dog\");\n\t\tvar result = controller.print(petType, Locale.ENGLISH);\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Tests that print returns '<null>' when the pet type name is null\")\n\tvoid testPrintReturnsNullStringWhenNameIsNull() {\n\t\tPetType petType = new PetType();\n\t\tpetType.setName(null);\n\t\tvar result = controller.print(petType, Locale.ENGLISH);\n\t\tassertEquals(\"<null>\", result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Tests that print throws NullPointerException when petType is null\")\n\tvoid testPrintThrowsNullPointerExceptionWhenPetTypeIsNull() {\n\t\tassertThrows(NullPointerException.class, () -> {\n\t\t\tcontroller.print(null, Locale.ENGLISH);\n\t\t});\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns the correct PetType when the input text matches a pet type name\")\n\tvoid testParseReturnsPetTypeWhenNameMatches() {\n\t\tPetType petType = new PetType();\n\t\tpetType.setName(\"dog\");\n\t\twhen(petTypeRepository.findPetTypes()).thenReturn(List.of(petType));\n\t\tvar result = controller.parse(\"dog\", Locale.ROOT);\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Throws ParseException when the input text does not match any pet type name\")\n\tvoid testParseThrowsParseExceptionWhenNoMatchFound() {\n\t\twhen(petTypeRepository.findPetTypes()).thenReturn(List.of());\n\t\tassertThrows(ParseException.class, () -> {\n\t\t\tcontroller.parse(\"unknown\", Locale.ROOT);\n\t\t});\n\t}\n\n\t@Test\n\t@DisplayName(\"Does not find a match when case does not match exactly\")\n\tvoid testParseIsCaseSensitive() {\n\t\tPetType petType = new PetType();\n\t\tpetType.setName(\"dog\");\n\t\twhen(petTypeRepository.findPetTypes()).thenReturn(List.of(petType));\n\t\tassertThrows(ParseException.class, () -> {\n\t\t\tcontroller.parse(\"Dog\", Locale.ROOT);\n\t\t});\n\t}\n\n\t@Test\n\t@DisplayName(\"Correctly identifies and returns the matching PetType from a list of available types\")\n\tvoid testParseReturnsPetTypeFromMultipleOptions() {\n\t\tPetType dogType = new PetType();\n\t\tdogType.setName(\"dog\");\n\t\tPetType catType = new PetType();\n\t\tcatType.setName(\"cat\");\n\t\tPetType birdType = new PetType();\n\t\tbirdType.setName(\"bird\");\n\t\twhen(petTypeRepository.findPetTypes()).thenReturn(List.of(dogType, catType, birdType));\n\t\tvar result = controller.parse(\"cat\", Locale.ROOT);\n\t\tassertNotNull(result);\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 80.311799,
+      "started_at": "2026-01-11T15:29:45.430088",
+      "completed_at": "2026-01-11T15:31:05.741887",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    },
+    {
+      "eval_case_id": "petclinic-ownercontroller-014",
+      "run_id": "04da70d8",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "pass",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "pass",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "pass",
+              "score": 1.0,
+              "message": "Compilation successful",
+              "details": {
+                "stdout": ""
+              },
+              "duration_ms": 6024.119138717651
+            },
+            {
+              "grader_name": "execution",
+              "result": "pass",
+              "score": 1.0,
+              "message": "All 4 tests passed",
+              "details": {
+                "tests_run": 4,
+                "tests_passed": 4,
+                "tests_failed": 0,
+                "tests_error": 0
+              },
+              "duration_ms": 8367.412090301514
+            }
+          ],
+          "tests_generated": 4,
+          "tests_passed": 4,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 1,
+          "fixes_applied": 0,
+          "duration_sec": 50.838683128356934,
+          "generated_test_code": "package org.springframework.samples.petclinic.owner;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport org.mockito.InjectMocks;\nimport org.mockito.Mock;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport static org.mockito.Mockito.*;\nimport static org.mockito.ArgumentMatchers.*;\nimport org.springframework.data.domain.Page;\nimport org.springframework.data.domain.PageRequest;\nimport org.springframework.data.domain.Pageable;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport static org.mockito.Mockito.*;\nimport org.springframework.web.bind.WebDataBinder;\nimport org.springframework.samples.petclinic.owner.Owner;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport static org.mockito.Mockito.*;\nimport org.junit.jupiter.api.Test;\nimport org.mockito.Mock;\nimport org.mockito.InjectMocks;\nimport java.util.Optional;\n\n@ExtendWith(MockitoExtension.class)\nclass OwnerControllerTest {\n\n\t@Mock\n\tprivate OwnerRepository owners;\n\n\t@InjectMocks\n\tprivate OwnerController controller;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\t// Mockito initializes @Mock and @InjectMocks automatically\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that the method calls setDisallowedFields on the WebDataBinder with 'id'\")\n\tvoid testSetAllowedFieldsSetsDisallowedId() {\n\t\tcontroller.setAllowedFields(mock(WebDataBinder.class));\n\t}\n\n\t@Test\n\t@DisplayName(\"Expects NullPointerException when dataBinder is null\")\n\tvoid testSetAllowedFieldsWithNullBinderThrows() {\n\t\tassertThrows(NullPointerException.class, () -> {\n\t\t\tcontroller.setAllowedFields(null);\n\t\t});\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns owner when valid ownerId is provided and owner exists\")\n\tvoid testFindOwnerWithValidId() {\n\t\tOwner testOwner = new Owner();\n\t\ttestOwner.setId(1);\n\t\ttestOwner.setFirstName(\"John\");\n\t\ttestOwner.setLastName(\"Doe\");\n\t\t;\n\t\twhen(owners.findById(1)).thenReturn(Optional.of(testOwner));\n\t\tvar result = controller.findOwner(1);\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Throws IllegalArgumentException when owner does not exist for given ID\")\n\tvoid testFindOwnerWithInvalidId() {\n\t\twhen(owners.findById(2)).thenReturn(Optional.empty());\n\t\tassertThrows(IllegalArgumentException.class, () -> {\n\t\t\tcontroller.findOwner(2);\n\t\t});\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 1,
+        "pass_rate": 1.0,
+        "pass_at_1": 1.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 50.842256,
+      "started_at": "2026-01-11T15:31:05.742707",
+      "completed_at": "2026-01-11T15:31:56.584963",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    },
+    {
+      "eval_case_id": "petclinic-petcontroller-015",
+      "run_id": "c458de8d",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "fail",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "fail",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "fail",
+              "score": 0.0,
+              "message": "Compilation failed with 4 errors",
+              "details": {
+                "error_count": 4,
+                "error_lines": [
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetControllerTest.java:[60,34] ';' expected",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetControllerTest.java:[60,46] ';' expected",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetControllerTest.java:[60,34] ';' expected",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetControllerTest.java:[60,46] ';' expected"
+                ],
+                "stderr": ""
+              },
+              "duration_ms": 6683.212757110596
+            },
+            {
+              "grader_name": "execution",
+              "result": "fail",
+              "score": 0.0,
+              "message": "No tests were executed",
+              "details": {
+                "stderr": "",
+                "stdout": "g-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetControllerTest.java:[60,46] ';' expected\n[ERROR] -> [Help 1]\n[ERROR] \n[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.\n[ERROR] Re-run Maven using the -X switch to enable full debug logging.\n[ERROR] \n[ERROR] For more information about the errors and possible solutions, please read the following articles:\n[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException\n"
+              },
+              "duration_ms": 6240.821123123169
+            }
+          ],
+          "tests_generated": 0,
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 1,
+          "fixes_applied": 0,
+          "duration_sec": 99.26208114624023,
+          "generated_test_code": "package org.springframework.samples.petclinic.owner;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport org.mockito.InjectMocks;\nimport org.mockito.Mock;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport static org.mockito.Mockito.*;\nimport static org.mockito.ArgumentMatchers.*;\nimport org.springframework.data.domain.Page;\nimport org.springframework.data.domain.PageRequest;\nimport org.springframework.data.domain.Pageable;\nimport org.springframework.samples.petclinic.owner.*;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport static org.mockito.Mockito.*;\nimport org.junit.jupiter.api.Test;\nimport org.springframework.samples.petclinic.owner.PetType;\nimport org.mockito.Mock;\nimport org.mockito.InjectMocks;\nimport java.util.*;\nimport org.springframework.samples.petclinic.owner.Owner;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport static org.mockito.Mockito.*;\nimport org.junit.jupiter.api.Test;\nimport org.mockito.Mock;\nimport org.mockito.InjectMocks;\nimport org.springframework.samples.petclinic.owner.OwnerRepository;\nimport org.junit.jupiter.api.BeforeEach;\nimport java.util.Optional;\n\n@ExtendWith(MockitoExtension.class)\nclass PetControllerTest {\n\n\t@Mock\n\tprivate OwnerRepository owners;\n\n\t@Mock\n\tprivate PetTypeRepository types;\n\n\t@InjectMocks\n\tprivate PetController controller;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\t// Mockito initializes @Mock and @InjectMocks automatically\n\t}\n\n\t@Test\n        @DisplayName(\"Verifies that populatePetTypes returns a collection of pet types when findPetTypes returns a non-empty list\")\n        void testPopulatePetTypesReturnsNonEmptyCollection() {\n            Collection<PetType> expectedCollection = Arrays.asList(createPetType(\"Dog\"), createPetType(\"Cat\"));\n            PetType createPetType(String name) { PetType pt = new PetType(); pt.setName(name); return pt; };\n            when(types.findPetTypes()).thenReturn(expectedCollection);\n            var result = controller.populatePetTypes();\n            assertNotNull(result);\n        }\n\n\t@Test\n\t@DisplayName(\"Verifies that populatePetTypes returns an empty collection when findPetTypes returns an empty list\")\n\tvoid testPopulatePetTypesReturnsEmptyCollection() {\n\t\tCollection<PetType> expectedCollection = Collections.emptyList();\n\t\twhen(types.findPetTypes()).thenReturn(expectedCollection);\n\t\tvar result = controller.populatePetTypes();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that populatePetTypes calls findPetTypes on the types service\")\n\tvoid testPopulatePetTypesCallsFindPetTypes() {\n\t\twhen(types.findPetTypes()).thenReturn(Collections.emptyList());\n\t\tvar result = controller.populatePetTypes();\n\t\tassertEquals(Collections.emptyList(), result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns the owner when an owner with the given ID exists\")\n\tvoid testFindOwnerWithValidId() {\n\t\tOwner testOwner = new Owner();\n\t\t;\n\t\ttestOwner.setId(1);\n\t\t;\n\t\ttestOwner.setFirstName(\"John\");\n\t\t;\n\t\twhen(owners.findById(1)).thenReturn(Optional.of(testOwner));\n\t\tvar result = controller.findOwner(1);\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Throws IllegalArgumentException when there is no owner with the given ID\")\n\tvoid testFindOwnerWithInvalidId() {\n\t\twhen(owners.findById(99)).thenReturn(Optional.empty());\n\t\tassertThrows(IllegalArgumentException.class, () -> {\n\t\t\tcontroller.findOwner(99);\n\t\t});\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 99.268789,
+      "started_at": "2026-01-11T15:31:56.585819",
+      "completed_at": "2026-01-11T15:33:35.854608",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    },
+    {
+      "eval_case_id": "petclinic-visitcontroller-016",
+      "run_id": "d41f6e64",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "timeout",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "timeout",
+          "grader_outputs": [],
+          "tests_generated": 0,
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 0,
+          "fixes_applied": 0,
+          "duration_sec": 360,
+          "generated_test_code": null,
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 439.104725,
+      "started_at": "2026-01-11T15:33:35.855267",
+      "completed_at": "2026-01-11T15:40:54.959992",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 16,
+    "passed": 11,
+    "failed": 2,
+    "errors": 0,
+    "timeouts": 1,
+    "skipped": 2,
+    "overall_pass_rate": 0.7857142857142857,
+    "avg_tests_generated": 3.8125,
+    "avg_tests_passed": 3.8125,
+    "avg_duration_sec": 83.71100461483002,
+    "avg_react_iterations": 1.375,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-11T15:17:16.417840",
+  "completed_at": "2026-01-11T15:40:54.960604",
+  "baseline_run_id": null
+}

@@ -1,0 +1,34 @@
+{
+  "test_type": "unit_class",
+  "target_name": "getValue",
+  "target_class": "Example",
+  "test_cases": [
+    {
+      "name": "test_getValue_returns_value",
+      "category": "happy_path",
+      "description": "Test getValue returns the value",
+      "inputs": {
+        "value": "None"
+      },
+      "expected": {
+        "returns": "None"
+      }
+    },
+    {
+      "name": "test_getValue_with_true_flag",
+      "category": "happy_path",
+      "description": "Test with True flag",
+      "inputs": {
+        "flag": "True"
+      },
+      "expected": {
+        "returns": "False"
+      }
+    }
+  ],
+  "imports_needed": [
+    "from unittest import TestCase",
+    "import pytest",
+    "import org.junit.jupiter.api.Test"
+  ]
+}

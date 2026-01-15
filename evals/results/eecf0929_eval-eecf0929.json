@@ -1,0 +1,93 @@
+{
+  "run_id": "eecf0929",
+  "run_name": "eval-eecf0929",
+  "description": null,
+  "dataset_name": "realworld",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "realworld-user-001",
+      "run_id": "7cd2d3c3",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "fail",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "fail",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "fail",
+              "score": 0.0,
+              "message": "Compilation failed with 0 errors",
+              "details": {
+                "error_count": 0,
+                "error_lines": [],
+                "stderr": ""
+              },
+              "duration_ms": 817.0890808105469
+            },
+            {
+              "grader_name": "execution",
+              "result": "fail",
+              "score": 0.0,
+              "message": "No tests were executed",
+              "details": {
+                "stderr": "",
+                "stdout": "ers/chandana/AI-Agents/spring-boot-realworld-example-app). Please verify you invoked Maven from the correct directory. -> [Help 1]\n[ERROR] \n[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.\n[ERROR] Re-run Maven using the -X switch to enable full debug logging.\n[ERROR] \n[ERROR] For more information about the errors and possible solutions, please read the following articles:\n[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MissingProjectException\n"
+              },
+              "duration_ms": 770.453929901123
+            }
+          ],
+          "tests_generated": 0,
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 0,
+          "fixes_applied": 0,
+          "duration_sec": 31.97951102256775,
+          "generated_test_code": "package io.spring.core.user;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nclass UserTest {\n\n    private User instance;\n\n    @BeforeEach\n    void setUp() {\n        instance = new User();\n    }\n\n        @Test\n        @DisplayName(\"Updates user fields when provided with non-empty strings\")\n        void testUpdateWithValidInputs() {\n            instance.update(\"newemail@example.com\", \"newuser\", \"newpass\", \"new bio\", \"newimage\");\n        }\n\n        @Test\n        @DisplayName(\"Does not update fields when inputs are null\")\n        void testUpdateWithNullInputs() {\n            instance.update(null, null, null, null, null);\n        }\n\n        @Test\n        @DisplayName(\"Does not update fields when inputs are empty strings\")\n        void testUpdateWithEmptyStrings() {\n            instance.update(\"\", \"\", \"\", \"\", \"\");\n        }\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 31.981713,
+      "started_at": "2026-01-11T11:21:00.459399",
+      "completed_at": "2026-01-11T11:21:32.441112",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 0,
+    "failed": 1,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 0.0,
+    "avg_tests_generated": 0.0,
+    "avg_tests_passed": 0.0,
+    "avg_duration_sec": 31.97951102256775,
+    "avg_react_iterations": 0.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-11T11:21:00.459385",
+  "completed_at": "2026-01-11T11:21:32.441538",
+  "baseline_run_id": null
+}

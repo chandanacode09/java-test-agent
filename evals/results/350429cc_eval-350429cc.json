@@ -1,0 +1,93 @@
+{
+  "run_id": "350429cc",
+  "run_name": "eval-350429cc",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-vet-001",
+      "run_id": "d9bd89a1",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "pass",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "pass",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "pass",
+              "score": 1.0,
+              "message": "Compilation successful",
+              "details": {
+                "stdout": ""
+              },
+              "duration_ms": 4179.646253585815
+            },
+            {
+              "grader_name": "execution",
+              "result": "pass",
+              "score": 1.0,
+              "message": "All 8 tests passed",
+              "details": {
+                "tests_run": 8,
+                "tests_passed": 8,
+                "tests_failed": 0,
+                "tests_error": 0
+              },
+              "duration_ms": 5728.157997131348
+            }
+          ],
+          "tests_generated": 8,
+          "tests_passed": 8,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 1,
+          "fixes_applied": 0,
+          "duration_sec": 120.777263879776,
+          "generated_test_code": "import static org.assertj.core.api.Assertions.assertThat;\nimport static org.junit.jupiter.api.Assertions.assertEquals;\nimport static org.junit.jupiter.api.Assertions.assertTrue;\nimport static org.mockito.Mockito.mock;\n\nimport java.util.List;\nimport java.util.Set;\n\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport org.mockito.Mock;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport org.springframework.samples.petclinic.vet.Specialty;\nimport org.springframework.samples.petclinic.vet.Vet;\n\n@ExtendWith(MockitoExtension.class)\npublic class VetTest {\n\n\tprivate Vet instance;\n\n\t@Mock\n\tprivate Specialty specialty;\n\n\t@Mock\n\tprivate Specialty anotherSpecialty;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new Vet();\n\t}\n\n\t@Test\n\t@DisplayName(\"getSpecialtiesInternal should return empty set initially\")\n\tvoid getSpecialtiesInternal_emptySet() {\n\t\t// Given\n\n\t\t// When\n\t\tint result = instance.getNrOfSpecialties();\n\n\t\t// Then\n\t\tassertEquals(0, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"getSpecialtiesInternal should return set with added specialties\")\n\tvoid getSpecialtiesInternal_withSpecialties() {\n\t\t// Given\n\t\tinstance.addSpecialty(specialty);\n\n\t\t// When\n\t\tList<Specialty> result = instance.getSpecialties();\n\n\t\t// Then\n\t\tassertThat(result).contains(specialty);\n\t}\n\n\t@Test\n\t@DisplayName(\"getSpecialties should return empty list initially\")\n\tvoid getSpecialties_emptyList() {\n\t\t// Given\n\n\t\t// When\n\t\tList<Specialty> result = instance.getSpecialties();\n\n\t\t// Then\n\t\tassertThat(result).isEmpty();\n\t}\n\n\t@Test\n\t@DisplayName(\"getSpecialties should return list with added specialties\")\n\tvoid getSpecialties_withSpecialties() {\n\t\t// Given\n\t\tinstance.addSpecialty(specialty);\n\n\t\t// When\n\t\tList<Specialty> result = instance.getSpecialties();\n\n\t\t// Then\n\t\tassertThat(result).contains(specialty);\n\t}\n\n\t@Test\n\t@DisplayName(\"getNrOfSpecialties should return zero initially\")\n\tvoid getNrOfSpecialties_zero() {\n\t\t// Given\n\n\t\t// When\n\t\tint result = instance.getNrOfSpecialties();\n\n\t\t// Then\n\t\tassertEquals(0, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"getNrOfSpecialties should return count of added specialties\")\n\tvoid getNrOfSpecialties_withSpecialties() {\n\t\t// Given\n\t\tinstance.addSpecialty(specialty);\n\t\tinstance.addSpecialty(anotherSpecialty);\n\n\t\t// When\n\t\tint result = instance.getNrOfSpecialties();\n\n\t\t// Then\n\t\tassertEquals(2, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"addSpecialty should add specialty to empty set\")\n\tvoid addSpecialty_toEmpty() {\n\t\t// Given\n\n\t\t// When\n\t\tinstance.addSpecialty(specialty);\n\n\t\t// Then\n\t\tassertTrue(instance.getSpecialties().contains(specialty));\n\t}\n\n\t@Test\n\t@DisplayName(\"addSpecialty should allow duplicates (edge case)\")\n\tvoid addSpecialty_duplicate() {\n\t\t// Given\n\t\tinstance.addSpecialty(specialty);\n\n\t\t// When\n\t\tinstance.addSpecialty(specialty); // Adding duplicate\n\n\t\t// Then\n\t\tassertEquals(1, instance.getNrOfSpecialties()); // Assuming set behavior, unique\n\t}\n\n}",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 1,
+        "pass_rate": 1.0,
+        "pass_at_1": 1.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 120.780983,
+      "started_at": "2026-01-12T09:45:24.198443",
+      "completed_at": "2026-01-12T09:47:24.979426",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 1,
+    "failed": 0,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 1.0,
+    "avg_tests_generated": 8.0,
+    "avg_tests_passed": 8.0,
+    "avg_duration_sec": 120.777263879776,
+    "avg_react_iterations": 1.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-12T09:45:24.198406",
+  "completed_at": "2026-01-12T09:47:24.980203",
+  "baseline_run_id": null
+}

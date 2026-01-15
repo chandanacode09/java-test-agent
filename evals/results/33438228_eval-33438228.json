@@ -1,0 +1,93 @@
+{
+  "run_id": "33438228",
+  "run_name": "eval-33438228",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-vets-007",
+      "run_id": "06a79b6d",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "pass",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "pass",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "pass",
+              "score": 1.0,
+              "message": "Compilation successful",
+              "details": {
+                "stdout": ""
+              },
+              "duration_ms": 4688.068151473999
+            },
+            {
+              "grader_name": "execution",
+              "result": "pass",
+              "score": 1.0,
+              "message": "All 2 tests passed",
+              "details": {
+                "tests_run": 2,
+                "tests_passed": 2,
+                "tests_failed": 0,
+                "tests_error": 0
+              },
+              "duration_ms": 4957.600831985474
+            }
+          ],
+          "tests_generated": 2,
+          "tests_passed": 2,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 1,
+          "fixes_applied": 0,
+          "duration_sec": 42.51132392883301,
+          "generated_test_code": "package org.springframework.samples.petclinic.vet;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport java.util.ArrayList;\nimport org.springframework.samples.petclinic.vet.Vet;\nimport org.springframework.samples.petclinic.vet.Vets;\nimport static org.junit.jupiter.api.Assertions.*;\nimport java.util.List;\nimport java.lang.reflect.Field;\nimport org.junit.jupiter.api.Test;\n\nclass VetsTest {\n\n\tprivate Vets instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new Vets();\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getVetList returns the existing list without re-initialization if vets is already set\")\n\tvoid testGetVetListReturnsExistingList() {\n\t\tVets vetsInstance = new Vets();\n\t\ttry {\n\t\t\tField vetsField = Vets.class.getDeclaredField(\"vets\");\n\t\t\tvetsField.setAccessible(true);\n\t\t\tList<Vet> existingList = new ArrayList<>();\n\t\t\texistingList.add(new Vet());\n\t\t\tvetsField.set(vetsInstance, existingList);\n\t\t\tList<Vet> result = vetsInstance.getVetList();\n\t\t\tassertNotNull(result);\n\t\t\tassertSame(existingList, result);\n\t\t}\n\t\tcatch (NoSuchFieldException | IllegalAccessException e) {\n\t\t\tfail(\"Reflection failed: \" + e.getMessage());\n\t\t}\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that multiple calls to getVetList return the same list object, ensuring lazy initialization\")\n\tvoid testGetVetListMultipleCallsReturnSameObject() {\n\t\tList<Vet> result1 = instance.getVetList();\n\t\tList<Vet> result2 = instance.getVetList();\n\t\tassertNotNull(result1);\n\t\tassertNotNull(result2);\n\t\tassertSame(result1, result2);\n\t}\n\n}",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 1,
+        "pass_rate": 1.0,
+        "pass_at_1": 1.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 42.514486,
+      "started_at": "2026-01-11T12:50:44.453183",
+      "completed_at": "2026-01-11T12:51:26.967669",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 1,
+    "failed": 0,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 1.0,
+    "avg_tests_generated": 2.0,
+    "avg_tests_passed": 2.0,
+    "avg_duration_sec": 42.51132392883301,
+    "avg_react_iterations": 1.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-11T12:50:44.453169",
+  "completed_at": "2026-01-11T12:51:26.968443",
+  "baseline_run_id": null
+}

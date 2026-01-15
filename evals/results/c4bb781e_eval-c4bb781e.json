@@ -1,0 +1,101 @@
+{
+  "run_id": "c4bb781e",
+  "run_name": "eval-c4bb781e",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-vet-001",
+      "run_id": "57763a71",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "fail",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "fail",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "fail",
+              "score": 0.0,
+              "message": "Compilation failed with 6 errors",
+              "details": {
+                "error_count": 6,
+                "error_lines": [
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetTest.java:[85,39] incompatible types: org.springframework.samples.petclinic.vet.Vet cannot be converted to org.springframework.samples.petclinic.vet.Specialty",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetTest.java:[92,47] incompatible types: org.springframework.samples.petclinic.vet.Vet cannot be converted to org.springframework.samples.petclinic.vet.Specialty",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetTest.java:[99,39] incompatible types: org.springframework.samples.petclinic.vet.Vet cannot be converted to org.springframework.samples.petclinic.vet.Specialty",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetTest.java:[85,39] incompatible types: org.springframework.samples.petclinic.vet.Vet cannot be converted to org.springframework.samples.petclinic.vet.Specialty",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetTest.java:[92,47] incompatible types: org.springframework.samples.petclinic.vet.Vet cannot be converted to org.springframework.samples.petclinic.vet.Specialty"
+                ],
+                "stderr": ""
+              },
+              "duration_ms": 4452.268123626709
+            },
+            {
+              "grader_name": "execution",
+              "result": "pass",
+              "score": 1.0,
+              "message": "All 8 tests passed",
+              "details": {
+                "tests_run": 8,
+                "tests_passed": 8,
+                "tests_failed": 0,
+                "tests_error": 0
+              },
+              "duration_ms": 4315.900802612305
+            }
+          ],
+          "tests_generated": 8,
+          "tests_passed": 8,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 1,
+          "fixes_applied": 0,
+          "duration_sec": 73.14653015136719,
+          "generated_test_code": "package org.springframework.samples.petclinic.vet;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\n\nclass VetTest {\n\n\tprivate Vet instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new Vet();\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getSpecialtiesInternal returns an empty HashSet when specialties is initially null\")\n\tvoid testGetSpecialtiesInternalReturnsEmptySetWhenInitiallyNull() {\n\t\tvar result = instance.getSpecialtiesInternal();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getSpecialtiesInternal returns the same Set instance on multiple calls and after adding a specialty\")\n\tvoid testGetSpecialtiesInternalReturnsSameInstanceOnRepeatedCalls() {\n\t\tvar result = instance.getSpecialtiesInternal();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that after adding a specialty, getSpecialtiesInternal contains the added specialty\")\n\tvoid testGetSpecialtiesInternalAfterAddingSpecialty() {\n\t\tvar result = instance.getSpecialtiesInternal();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify that getSpecialties returns a list of specialties sorted by name\")\n\tvoid testGetSpecialtiesReturnsSortedList() {\n\t\tvar result = instance.getSpecialties();\n\t\tassertEquals(null, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify that getSpecialties returns an empty list when no specialties are added\")\n\tvoid testGetSpecialtiesReturnsEmptyListWhenNoSpecialties() {\n\t\tvar result = instance.getSpecialties();\n\t\tassertEquals(null, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify that getSpecialties throws NullPointerException when a specialty has a null name during sorting\")\n\tvoid testGetSpecialtiesThrowsExceptionWithNullName() {\n\t\tassertThrows(java.lang.NullPointerException.class, () -> {\n\t\t\tinstance.getSpecialties();\n\t\t});\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getNrOfSpecialties returns the correct count when specialties are added to the vet\")\n\tvoid testGetNrOfSpecialtiesReturnsCountWhenSpecialtiesAdded() {\n\t\tvar result = instance.getNrOfSpecialties();\n\t\tassertEquals(2, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getNrOfSpecialties returns zero when no specialties are added\")\n\tvoid testGetNrOfSpecialtiesReturnsZeroWhenNoSpecialtiesAdded() {\n\t\tvar result = instance.getNrOfSpecialties();\n\t\tassertEquals(0, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getNrOfSpecialties correctly counts multiple specialties added\")\n\tvoid testGetNrOfSpecialtiesAfterAddingMultipleSpecialties() {\n\t\tvar result = instance.getNrOfSpecialties();\n\t\tassertEquals(5, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that adding a valid Specialty to a Vet object adds it to the internal specialties collection, which can be confirmed by checking if getSpecialties() contains the added specialty.\")\n\tvoid testAddSpecialtyHappyPath() {\n\t\tinstance.addSpecialty(new Vet());\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies behavior when adding a null Specialty to a Vet object, expecting a potential NullPointerException if the underlying collection does not allow nulls.\")\n\tvoid testAddSpecialtyWithNull() {\n\t\tassertThrows(NullPointerException.class, () -> {\n\t\t\tinstance.addSpecialty(new Vet());\n\t\t});\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that adding multiple Specialty objects to a Vet object accumulates them correctly in the collection without duplicates if the collection is a Set.\")\n\tvoid testAddSpecialtyMultiple() {\n\t\tinstance.addSpecialty(new Vet());\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 73.147291,
+      "started_at": "2026-01-10T12:16:59.632163",
+      "completed_at": "2026-01-10T12:18:12.779454",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 0,
+    "failed": 1,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 0.0,
+    "avg_tests_generated": 8.0,
+    "avg_tests_passed": 8.0,
+    "avg_duration_sec": 73.14653015136719,
+    "avg_react_iterations": 1.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-10T12:16:59.632154",
+  "completed_at": "2026-01-10T12:18:12.779526",
+  "baseline_run_id": null
+}

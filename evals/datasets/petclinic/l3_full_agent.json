@@ -1,0 +1,152 @@
+{
+  "dataset_name": "petclinic_l3_agent",
+  "dataset_version": "1.0",
+  "level": "l3_agent",
+  "cases": [
+    {
+      "id": "petclinic-vet-001",
+      "name": "Vet Entity Tests",
+      "description": "Generate tests for the Vet entity class with specialties",
+      "level": "l3_agent",
+      "project_path": "/Users/chandana/AI-Agents/spring-petclinic",
+      "target_class": "Vet",
+      "metadata": {
+        "class_name": "Vet",
+        "fully_qualified_name": "org.springframework.samples.petclinic.vet.Vet",
+        "complexity": "entity",
+        "method_count": 4,
+        "has_dependencies": false,
+        "has_inheritance": true,
+        "uses_generics": true,
+        "framework_annotations": ["@Entity", "@Table"],
+        "expected_test_count": 6,
+        "source_file": "src/main/java/org/springframework/samples/petclinic/vet/Vet.java",
+        "tags": ["jpa", "entity", "specialties"]
+      },
+      "expectations": {
+        "should_compile": true,
+        "should_pass": true,
+        "min_test_count": 4,
+        "max_iterations": 3
+      },
+      "k_samples": 1,
+      "timeout_sec": 300
+    },
+    {
+      "id": "petclinic-specialty-002",
+      "name": "Specialty Entity Tests",
+      "description": "Generate tests for the Specialty entity (simple NamedEntity)",
+      "level": "l3_agent",
+      "project_path": "/Users/chandana/AI-Agents/spring-petclinic",
+      "target_class": "Specialty",
+      "metadata": {
+        "class_name": "Specialty",
+        "fully_qualified_name": "org.springframework.samples.petclinic.vet.Specialty",
+        "complexity": "entity",
+        "method_count": 0,
+        "has_dependencies": false,
+        "has_inheritance": true,
+        "uses_generics": false,
+        "framework_annotations": ["@Entity", "@Table"],
+        "expected_test_count": 4,
+        "source_file": "src/main/java/org/springframework/samples/petclinic/vet/Specialty.java",
+        "tags": ["jpa", "entity", "simple"]
+      },
+      "expectations": {
+        "should_compile": true,
+        "should_pass": true,
+        "min_test_count": 2,
+        "max_iterations": 3
+      },
+      "k_samples": 1,
+      "timeout_sec": 180
+    },
+    {
+      "id": "petclinic-pet-003",
+      "name": "Pet Entity Tests",
+      "description": "Generate tests for Pet entity with owner relationship",
+      "level": "l3_agent",
+      "project_path": "/Users/chandana/AI-Agents/spring-petclinic",
+      "target_class": "Pet",
+      "metadata": {
+        "class_name": "Pet",
+        "fully_qualified_name": "org.springframework.samples.petclinic.owner.Pet",
+        "complexity": "entity",
+        "method_count": 6,
+        "has_dependencies": false,
+        "has_inheritance": true,
+        "uses_generics": true,
+        "framework_annotations": ["@Entity", "@Table"],
+        "expected_test_count": 8,
+        "source_file": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java",
+        "tags": ["jpa", "entity", "relationships"]
+      },
+      "expectations": {
+        "should_compile": true,
+        "should_pass": true,
+        "min_test_count": 4,
+        "max_iterations": 5
+      },
+      "k_samples": 1,
+      "timeout_sec": 240
+    },
+    {
+      "id": "petclinic-owner-004",
+      "name": "Owner Entity Tests",
+      "description": "Generate tests for Owner with Pet collection and address",
+      "level": "l3_agent",
+      "project_path": "/Users/chandana/AI-Agents/spring-petclinic",
+      "target_class": "Owner",
+      "metadata": {
+        "class_name": "Owner",
+        "fully_qualified_name": "org.springframework.samples.petclinic.owner.Owner",
+        "complexity": "entity",
+        "method_count": 10,
+        "has_dependencies": false,
+        "has_inheritance": true,
+        "uses_generics": true,
+        "framework_annotations": ["@Entity", "@Table"],
+        "expected_test_count": 12,
+        "source_file": "src/main/java/org/springframework/samples/petclinic/owner/Owner.java",
+        "tags": ["jpa", "entity", "relationships", "complex"]
+      },
+      "expectations": {
+        "should_compile": true,
+        "should_pass": true,
+        "min_test_count": 6,
+        "max_iterations": 8
+      },
+      "k_samples": 1,
+      "timeout_sec": 300
+    },
+    {
+      "id": "petclinic-vetcontroller-005",
+      "name": "VetController Tests",
+      "description": "Generate tests for Spring MVC controller with pagination",
+      "level": "l3_agent",
+      "project_path": "/Users/chandana/AI-Agents/spring-petclinic",
+      "target_class": "VetController",
+      "metadata": {
+        "class_name": "VetController",
+        "fully_qualified_name": "org.springframework.samples.petclinic.vet.VetController",
+        "complexity": "controller",
+        "method_count": 4,
+        "has_dependencies": true,
+        "has_inheritance": false,
+        "uses_generics": false,
+        "framework_annotations": ["@Controller"],
+        "expected_test_count": 8,
+        "source_file": "src/main/java/org/springframework/samples/petclinic/vet/VetController.java",
+        "tags": ["spring", "mvc", "controller", "mocking"]
+      },
+      "expectations": {
+        "should_compile": true,
+        "should_pass": true,
+        "min_test_count": 4,
+        "max_iterations": 8
+      },
+      "k_samples": 1,
+      "timeout_sec": 360
+    }
+  ]
+}

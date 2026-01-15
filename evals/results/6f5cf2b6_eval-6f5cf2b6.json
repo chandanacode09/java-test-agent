@@ -1,0 +1,101 @@
+{
+  "run_id": "6f5cf2b6",
+  "run_name": "eval-6f5cf2b6",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-pet-003",
+      "run_id": "d29d71e1",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "fail",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "fail",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "fail",
+              "score": 0.0,
+              "message": "Compilation failed with 20 errors",
+              "details": {
+                "error_count": 20,
+                "error_lines": [
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTest.java:[57,55] ')' or ',' expected",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTest.java:[57,58] ';' expected",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTest.java:[57,62] not a statement",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTest.java:[57,68] ';' expected",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTest.java:[90,27] ')' or ',' expected"
+                ],
+                "stderr": ""
+              },
+              "duration_ms": 5228.374004364014
+            },
+            {
+              "grader_name": "execution",
+              "result": "pass",
+              "score": 1.0,
+              "message": "All 7 tests passed",
+              "details": {
+                "tests_run": 7,
+                "tests_passed": 7,
+                "tests_failed": 0,
+                "tests_error": 0
+              },
+              "duration_ms": 4478.802919387817
+            }
+          ],
+          "tests_generated": 0,
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 0,
+          "fixes_applied": 0,
+          "duration_sec": 138.6164608001709,
+          "generated_test_code": "package org.springframework.samples.petclinic.owner;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\n\nclass PetTest {\n\n\tprivate Pet instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new Pet();\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setting a valid birth date updates the Pet object's birthDate field correctly, checked via getBirthDate\")\n\tvoid testSetBirthDateValidDate() {\n\t\tinstance.setBirthDate(new Pet());\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setting the birth date to null is allowed and returns null via getBirthDate\")\n\tvoid testSetBirthDateNullValue() {\n\t\tinstance.setBirthDate(new Pet());\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setting the birth date to the minimum possible LocalDate works correctly\")\n\tvoid testSetBirthDateMinDate() {\n\t\tinstance.setBirthDate(new Pet());\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getBirthDate returns the set birthDate correctly\")\n\tvoid testGetBirthDateReturnsExpectedDate() {\n\t\tvar result = instance.getBirthDate();\n\t\tassertEquals(java.time.LocalDate.of(2020, 1, 15), result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Tests getBirthDate when birthDate is null\")\n\tvoid testGetBirthDateWithNullValue() {\n\t\tvar result = instance.getBirthDate();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n        @DisplayName(\"Verifies that getType returns the PetType object that was set using setType\")\n        void testGetTypeReturnsSetPetType() {\n            var result = instance.getType();\n            assertEquals(\"a PetType object with name \"cat\"\", result);\n        }\n\n\t@Test\n\t@DisplayName(\"Verifies that getType returns null when the PetType is set to null\")\n\tvoid testGetTypeReturnsNull() {\n\t\tvar result = instance.getType();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setType handles null input for PetType without throwing exceptions\")\n\tvoid testSetTypeWithNull() {\n\t\tinstance.setType(null);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that addVisit handles null input for Visit without throwing exceptions\")\n\tvoid testAddVisitWithNull() {\n\t\tinstance.setType(null);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify that getVisits returns an empty collection when no visits have been added to the Pet\")\n\tvoid testGetVisitsReturnsEmptyCollection() {\n\t\tvar result = instance.getVisits();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n        @DisplayName(\"Verify that getVisits returns a collection containing the visits that have been added to the Pet\")\n        void testGetVisitsReturnsCollectionWithAddedVisits() {\n            var result = instance.getVisits();\n            assertEquals(a Collection<Visit> containing the added Visit(s), result);\n        }\n\n\t@Test\n\t@DisplayName(\"Verifies that a valid Visit object is successfully added to the Pet's visits collection\")\n\tvoid testAddVisitHappyPath() {\n\t\tinstance.addVisit(new Pet());\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that adding a null Visit adds null to the visits collection without throwing an exception\")\n\tvoid testAddVisitNullVisit() {\n\t\tinstance.addVisit(new Pet());\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that multiple Visit objects are correctly added and the collection size increases appropriately\")\n\tvoid testAddVisitMultipleVisits() {\n\t\tinstance.addVisit(new Pet());\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 138.620055,
+      "started_at": "2026-01-10T12:02:06.098984",
+      "completed_at": "2026-01-10T12:04:24.719039",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 0,
+    "failed": 1,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 0.0,
+    "avg_tests_generated": 0.0,
+    "avg_tests_passed": 0.0,
+    "avg_duration_sec": 138.6164608001709,
+    "avg_react_iterations": 0.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-10T12:02:06.098972",
+  "completed_at": "2026-01-10T12:04:24.719668",
+  "baseline_run_id": null
+}

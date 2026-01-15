@@ -36,9 +36,16 @@ FRAMEWORK_PATTERNS = {
 try:
     import tree_sitter_python as tspython
     from tree_sitter import Language as TSLanguage, Parser
-    TREE_SITTER_AVAILABLE = True
+    TREE_SITTER_PYTHON_AVAILABLE = True
 except ImportError:
-    TREE_SITTER_AVAILABLE = False
+    TREE_SITTER_PYTHON_AVAILABLE = False
+
+# Try to import tree-sitter-java for robust Java parsing
+try:
+    from .tree_sitter_parser import TreeSitterJavaParser
+    TREE_SITTER_JAVA_AVAILABLE = True
+except ImportError:
+    TREE_SITTER_JAVA_AVAILABLE = False
 
 
 class ASTParser:
@@ -51,9 +58,13 @@ class ASTParser:
     def __init__(self, language: Language = Language.PYTHON):
         self.language = language
         self._parser = None
+        self._java_parser = None
 
-        if TREE_SITTER_AVAILABLE and language == Language.PYTHON:
+        if TREE_SITTER_PYTHON_AVAILABLE and language == Language.PYTHON:
             self._init_tree_sitter()
+
+        if TREE_SITTER_JAVA_AVAILABLE and language == Language.JAVA:
+            self._java_parser = TreeSitterJavaParser()
 
     def _init_tree_sitter(self):
         """Initialize tree-sitter parser."""
@@ -69,11 +80,16 @@ class ASTParser:
         Returns:
             Tuple of (functions, classes)
         """
-        content = file_path.read_text()
-
         if self.language == Language.JAVA:
-            return self._parse_java_regex(content, file_path)
-        elif self._parser and self.language == Language.PYTHON:
+            # Use tree-sitter for robust Java parsing, fallback to regex
+            if self._java_parser:
+                return self._java_parser.parse_file(file_path)
+            else:
+                content = file_path.read_text()
+                return self._parse_java_regex(content, file_path)
+
+        content = file_path.read_text()
+        if self._parser and self.language == Language.PYTHON:
             return self._parse_python_tree_sitter(content, file_path)
         else:
             return self._parse_python_regex(content, file_path)
@@ -703,32 +719,59 @@ class ASTParser:
         classes = []
         lines = content.split('\n')
 
-        # Java class pattern - matches public/private/protected class declarations
+        # Java class/interface pattern - matches class, abstract class, and interface declarations
+        # Handles generic type parameters like <T, ID extends Comparable<ID>>
         class_pattern = re.compile(
-            r'^[ \t]*(public|private|protected)?\s*(abstract|final)?\s*class\s+(\w+)'
-            r'(?:\s+extends\s+(\w+))?'
-            r'(?:\s+implements\s+([\w,\s]+))?\s*\{',
+            r'^[ \t]*(public|private|protected)?\s*'  # Optional visibility
+            r'(abstract|final)?\s*'                    # Optional abstract/final
+            r'(class|interface)\s+'                    # class or interface keyword
+            r'(\w+)'                                   # Class/interface name
+            r'(?:<[^>]+(?:<[^>]+>)?[^>]*>)?'          # Optional generic params <T, K extends X<Y>>
+            r'(?:\s+extends\s+([\w<>,\s]+?))?'        # Optional extends (with generics)
+            r'(?:\s+implements\s+([\w<>,\s]+?))?\s*\{',  # Optional implements (with generics)
             re.MULTILINE
         )
 
         # Java method pattern - matches method declarations
-        # MUST start with visibility modifier to avoid matching if/for/etc
+        # Handles regular methods, static methods, default interface methods
         method_pattern = re.compile(
-            r'^[ \t]*(public|private|protected)\s+'  # REQUIRED visibility
-            r'(static\s+)?'                           # Optional static
-            r'(final\s+)?'                            # Optional final
-            r'(?:<[\w\s,<>]+>\s+)?'                   # Optional generic type params
-            r'([\w<>\[\],\s]+?)\s+'                   # Return type
-            r'(\w+)\s*\('                             # Method name
-            r'([^)]*)\)',                             # Parameters
+            r'^[ \t]*(public|private|protected|default)\s+'   # Required visibility or default
+            r'(static\s+)?'                                   # Optional static
+            r'(final\s+)?'                                    # Optional final
+            r'(?:<[\w\s,<>]+>\s+)?'                           # Optional generic type params
+            r'(?:@\w+(?:\s*\([^)]*\))?\s+)?'                  # Optional annotation before return type (@ResponseBody)
+            r'([\w<>\[\],]+)\s+'                              # Return type (no spaces - single word/generic)
+            r'(\w+)\s*\('                                     # Method name
+            r'((?:[^()]*|\([^)]*\))*)\)',                     # Parameters (handles nested parens in annotations)
             re.MULTILINE
         )
 
-        # Find all classes
+        # Additional pattern for interface method signatures (no visibility, no body)
+        interface_method_pattern = re.compile(
+            r'^[ \t]*(?:<[\w\s,<>]+>\s+)?'                    # Optional generic type params
+            r'([\w<>\[\],]+)\s+'                              # Return type
+            r'(\w+)\s*\('                                     # Method name
+            r'((?:[^()]*|\([^)]*\))*)\)\s*;',                 # Parameters ending with ; (handles nested parens)
+            re.MULTILINE
+        )
+
+        # Constructor pattern - constructors don't have return types
+        # Matches: public ClassName(params) or just ClassName(params)
+        # Note: Use simple [^)]* for params to avoid catastrophic backtracking
+        constructor_pattern = re.compile(
+            r'^[ \t]*(public|private|protected)?\s*'   # Optional visibility
+            r'(\w+)\s*\('                              # Constructor name (same as class name)
+            r'([^)]*)\)\s*'                            # Parameters (simple - no nested parens)
+            r'(?:throws\s+[\w,\s]+\s*)?\{',            # Optional throws clause, then opening brace
+            re.MULTILINE
+        )
+
+        # Find all classes and interfaces
         for match in class_pattern.finditer(content):
-            class_name = match.group(3)
-            extends = match.group(4)
-            implements = match.group(5)
+            class_type = match.group(3)  # 'class' or 'interface'
+            class_name = match.group(4)
+            extends = match.group(5)
+            implements = match.group(6)
 
             start_line = content[:match.start()].count('\n') + 1
             class_start_pos = match.end()
@@ -738,9 +781,15 @@ class ASTParser:
 
             base_classes = []
             if extends:
-                base_classes.append(extends)
+                # Clean up extends - remove generic params for base class list
+                extends_clean = re.sub(r'<[^>]+>', '', extends).strip()
+                base_classes.append(extends_clean)
             if implements:
-                base_classes.extend([i.strip() for i in implements.split(',')])
+                # Clean up implements - remove generic params
+                for impl in implements.split(','):
+                    impl_clean = re.sub(r'<[^>]+>', '', impl).strip()
+                    if impl_clean:
+                        base_classes.append(impl_clean)
 
             # Extract class body
             class_body_start = match.end()
@@ -750,6 +799,100 @@ class ASTParser:
             # Find methods and constructors within this class
             methods = []
             constructors = []
+            is_interface = (class_type == 'interface')
+
+            # For interfaces, also parse method signatures (no body)
+            if is_interface:
+                for sig_match in interface_method_pattern.finditer(class_body):
+                    return_type = sig_match.group(1).strip()
+                    method_name = sig_match.group(2)
+                    params_str = sig_match.group(3)
+
+                    # Skip if method name is a Java keyword
+                    if method_name in ('if', 'for', 'while', 'switch', 'try', 'catch', 'return'):
+                        continue
+
+                    method_start_line = start_line + class_body[:sig_match.start()].count('\n')
+
+                    params = self._parse_java_params(params_str)
+                    docstring = self._extract_javadoc(class_body, sig_match.start())
+
+                    func_context = FunctionContext(
+                        name=method_name,
+                        location=CodeLocation(
+                            file_path=file_path,
+                            start_line=method_start_line,
+                            end_line=method_start_line
+                        ),
+                        parameters=params,
+                        return_type=return_type if return_type != 'void' else None,
+                        docstring=docstring,
+                        is_async=False,
+                        is_method=True,
+                        class_name=class_name,
+                        decorators=[],
+                        source_code=sig_match.group(0),
+                        calls=[],
+                        imports=[]
+                    )
+                    methods.append(func_context)
+                    functions.append(func_context)
+
+            # Find constructors using constructor pattern (they don't have return types)
+            for ctor_match in constructor_pattern.finditer(class_body):
+                visibility = ctor_match.group(1) or 'package'
+                ctor_name = ctor_match.group(2)
+                params_str = ctor_match.group(3)
+
+                # Only match if constructor name equals class name
+                if ctor_name != class_name:
+                    continue
+
+                # Skip private constructors
+                if visibility == 'private':
+                    continue
+
+                ctor_start_line = start_line + class_body[:ctor_match.start()].count('\n')
+                ctor_end_line = self._find_java_method_end(
+                    class_body, ctor_match.end() - 1, ctor_start_line  # -1 because pattern includes {
+                )
+
+                # Parse parameters
+                params = self._parse_java_params(params_str)
+
+                # Get source code for the constructor
+                ctor_body_start = ctor_match.start()
+                ctor_body_end = self._find_closing_brace_pos(
+                    class_body, ctor_match.end() - 1  # -1 because pattern includes {
+                )
+                if ctor_body_end > ctor_body_start:
+                    source_code = class_body[ctor_body_start:ctor_body_end + 1]
+                else:
+                    source_code = ctor_match.group(0)
+
+                # Extract Javadoc if present
+                docstring = self._extract_javadoc(class_body, ctor_match.start())
+
+                ctor_context = FunctionContext(
+                    name=ctor_name,
+                    location=CodeLocation(
+                        file_path=file_path,
+                        start_line=ctor_start_line,
+                        end_line=ctor_end_line
+                    ),
+                    parameters=params,
+                    return_type=None,  # Constructors have no return type
+                    docstring=docstring,
+                    is_async=False,
+                    is_method=False,  # Constructors are not methods
+                    class_name=class_name,
+                    decorators=[],
+                    source_code=source_code,
+                    calls=[],
+                    imports=[]
+                )
+                constructors.append(ctor_context)
+
             for method_match in method_pattern.finditer(class_body):
                 visibility = method_match.group(1) or 'package'
                 is_static = method_match.group(2) is not None
@@ -757,14 +900,19 @@ class ASTParser:
                 method_name = method_match.group(5)
                 params_str = method_match.group(6)
 
-                # Check if this is a constructor (method name == class name)
-                is_constructor = (method_name == class_name)
+                # Skip private methods - they can't be tested directly
+                if visibility == 'private':
+                    continue
+
+                # Skip if method name is a Java keyword (false positive)
+                if method_name in ('if', 'for', 'while', 'switch', 'try', 'catch', 'return'):
+                    continue
 
                 # Skip abstract methods, interface methods (no body)
                 method_end_pos = method_match.end()
                 remaining = class_body[method_end_pos:method_end_pos + 50].strip()
                 if remaining.startswith(';'):
-                    continue  # Abstract method
+                    continue  # Abstract method - already handled for interfaces
 
                 method_start_line = start_line + class_body[:method_match.start()].count('\n')
                 method_end_line = self._find_java_method_end(
@@ -795,10 +943,10 @@ class ASTParser:
                         end_line=method_end_line
                     ),
                     parameters=params,
-                    return_type=None if is_constructor else (return_type if return_type != 'void' else None),
+                    return_type=return_type if return_type != 'void' else None,
                     docstring=docstring,
                     is_async=False,
-                    is_method=not is_constructor,  # Constructors are not methods
+                    is_method=True,
                     class_name=class_name,
                     decorators=[],  # Java uses annotations, could add later
                     source_code=source_code,
@@ -806,12 +954,9 @@ class ASTParser:
                     imports=[]
                 )
 
-                if is_constructor:
-                    constructors.append(func_context)
-                else:
-                    methods.append(func_context)
-                    # Also add methods to top-level functions list for easier access
-                    functions.append(func_context)
+                methods.append(func_context)
+                # Also add methods to top-level functions list for easier access
+                functions.append(func_context)
 
             # If no explicit constructors found, add default no-arg constructor
             if not constructors:
@@ -907,8 +1052,9 @@ class ASTParser:
             if not param:
                 continue
 
-            # Handle annotations like @NotNull String name
-            param = re.sub(r'@\w+\s*', '', param)
+            # Handle annotations like @NotNull String name or @RequestParam(defaultValue = "1") int page
+            # Remove annotations with optional parameters: @Name or @Name(...) or @Name({...})
+            param = re.sub(r'@\w+(?:\s*\([^)]*\))?\s*', '', param)
 
             # Handle final keyword
             param = re.sub(r'\bfinal\s+', '', param)

@@ -1,0 +1,263 @@
+{
+  "dataset_name": "commons_lang_l3_utils",
+  "dataset_version": "1.0",
+  "level": "l3_agent",
+  "cases": [
+    {
+      "id": "commons-charsets-001",
+      "name": "Charsets Tests",
+      "description": "Generate tests for Charsets utility constants",
+      "level": "l3_agent",
+      "project_path": "/Users/chandana/AI-Agents/commons-lang",
+      "target_class": "Charsets",
+      "metadata": {
+        "class_name": "Charsets",
+        "fully_qualified_name": "org.apache.commons.lang3.Charsets",
+        "complexity": "pojo",
+        "method_count": 1,
+        "has_dependencies": false,
+        "has_inheritance": false,
+        "uses_generics": false,
+        "framework_annotations": [],
+        "source_file": "src/main/java/org/apache/commons/lang3/Charsets.java",
+        "tags": [
+          "utility",
+          "tier-easy"
+        ],
+        "expected_test_count": 2
+      },
+      "expectations": {
+        "should_compile": true,
+        "should_pass": true,
+        "min_test_count": 1,
+        "max_iterations": 3
+      },
+      "k_samples": 1,
+      "timeout_sec": 180
+    },
+    {
+      "id": "commons-classloaderutils-002",
+      "name": "ClassLoaderUtils Tests",
+      "description": "Generate tests for ClassLoader utilities",
+      "level": "l3_agent",
+      "project_path": "/Users/chandana/AI-Agents/commons-lang",
+      "target_class": "ClassLoaderUtils",
+      "metadata": {
+        "class_name": "ClassLoaderUtils",
+        "fully_qualified_name": "org.apache.commons.lang3.ClassLoaderUtils",
+        "complexity": "utility",
+        "method_count": 3,
+        "has_dependencies": false,
+        "has_inheritance": false,
+        "uses_generics": false,
+        "framework_annotations": [],
+        "source_file": "src/main/java/org/apache/commons/lang3/ClassLoaderUtils.java",
+        "tags": [
+          "utility",
+          "tier-easy"
+        ],
+        "expected_test_count": 4
+      },
+      "expectations": {
+        "should_compile": true,
+        "should_pass": true,
+        "min_test_count": 2,
+        "max_iterations": 3
+      },
+      "k_samples": 1,
+      "timeout_sec": 180
+    },
+    {
+      "id": "commons-archutils-003",
+      "name": "ArchUtils Tests",
+      "description": "Generate tests for architecture detection utilities",
+      "level": "l3_agent",
+      "project_path": "/Users/chandana/AI-Agents/commons-lang",
+      "target_class": "ArchUtils",
+      "metadata": {
+        "class_name": "ArchUtils",
+        "fully_qualified_name": "org.apache.commons.lang3.ArchUtils",
+        "complexity": "utility",
+        "method_count": 4,
+        "has_dependencies": false,
+        "has_inheritance": false,
+        "uses_generics": false,
+        "framework_annotations": [],
+        "source_file": "src/main/java/org/apache/commons/lang3/ArchUtils.java",
+        "tags": [
+          "utility",
+          "tier-easy"
+        ],
+        "expected_test_count": 4
+      },
+      "expectations": {
+        "should_compile": true,
+        "should_pass": true,
+        "min_test_count": 2,
+        "max_iterations": 3
+      },
+      "k_samples": 1,
+      "timeout_sec": 180
+    },
+    {
+      "id": "commons-classpathutils-004",
+      "name": "ClassPathUtils Tests",
+      "description": "Generate tests for classpath utilities",
+      "level": "l3_agent",
+      "project_path": "/Users/chandana/AI-Agents/commons-lang",
+      "target_class": "ClassPathUtils",
+      "metadata": {
+        "class_name": "ClassPathUtils",
+        "fully_qualified_name": "org.apache.commons.lang3.ClassPathUtils",
+        "complexity": "utility",
+        "method_count": 4,
+        "has_dependencies": false,
+        "has_inheritance": false,
+        "uses_generics": false,
+        "framework_annotations": [],
+        "source_file": "src/main/java/org/apache/commons/lang3/ClassPathUtils.java",
+        "tags": [
+          "utility",
+          "tier-easy"
+        ],
+        "expected_test_count": 4
+      },
+      "expectations": {
+        "should_compile": true,
+        "should_pass": true,
+        "min_test_count": 2,
+        "max_iterations": 3
+      },
+      "k_samples": 1,
+      "timeout_sec": 180
+    },
+    {
+      "id": "commons-arraysorter-005",
+      "name": "ArraySorter Tests",
+      "description": "Generate tests for array sorting utilities",
+      "level": "l3_agent",
+      "project_path": "/Users/chandana/AI-Agents/commons-lang",
+      "target_class": "ArraySorter",
+      "metadata": {
+        "class_name": "ArraySorter",
+        "fully_qualified_name": "org.apache.commons.lang3.ArraySorter",
+        "complexity": "utility",
+        "method_count": 6,
+        "has_dependencies": false,
+        "has_inheritance": false,
+        "uses_generics": true,
+        "framework_annotations": [],
+        "source_file": "src/main/java/org/apache/commons/lang3/ArraySorter.java",
+        "tags": [
+          "utility",
+          "tier-medium"
+        ],
+        "expected_test_count": 6
+      },
+      "expectations": {
+        "should_compile": true,
+        "should_pass": true,
+        "min_test_count": 3,
+        "max_iterations": 5
+      },
+      "k_samples": 1,
+      "timeout_sec": 240
+    },
+    {
+      "id": "commons-bitfield-006",
+      "name": "BitField Tests",
+      "description": "Generate tests for bit manipulation utilities",
+      "level": "l3_agent",
+      "project_path": "/Users/chandana/AI-Agents/commons-lang",
+      "target_class": "BitField",
+      "metadata": {
+        "class_name": "BitField",
+        "fully_qualified_name": "org.apache.commons.lang3.BitField",
+        "complexity": "utility",
+        "method_count": 12,
+        "has_dependencies": false,
+        "has_inheritance": false,
+        "uses_generics": false,
+        "framework_annotations": [],
+        "source_file": "src/main/java/org/apache/commons/lang3/BitField.java",
+        "tags": [
+          "utility",
+          "tier-medium"
+        ],
+        "expected_test_count": 8
+      },
+      "expectations": {
+        "should_compile": true,
+        "should_pass": true,
+        "min_test_count": 4,
+        "max_iterations": 5
+      },
+      "k_samples": 1,
+      "timeout_sec": 240
+    },
+    {
+      "id": "commons-charsetutils-007",
+      "name": "CharSetUtils Tests",
+      "description": "Generate tests for character set utilities",
+      "level": "l3_agent",
+      "project_path": "/Users/chandana/AI-Agents/commons-lang",
+      "target_class": "CharSetUtils",
+      "metadata": {
+        "class_name": "CharSetUtils",
+        "fully_qualified_name": "org.apache.commons.lang3.CharSetUtils",
+        "complexity": "utility",
+        "method_count": 6,
+        "has_dependencies": false,
+        "has_inheritance": false,
+        "uses_generics": false,
+        "framework_annotations": [],
+        "source_file": "src/main/java/org/apache/commons/lang3/CharSetUtils.java",
+        "tags": [
+          "utility",
+          "tier-medium"
+        ],
+        "expected_test_count": 6
+      },
+      "expectations": {
+        "should_compile": true,
+        "should_pass": true,
+        "min_test_count": 3,
+        "max_iterations": 5
+      },
+      "k_samples": 1,
+      "timeout_sec": 240
+    },
+    {
+      "id": "commons-integerrange-008",
+      "name": "IntegerRange Tests",
+      "description": "Generate tests for IntegerRange value class",
+      "level": "l3_agent",
+      "project_path": "/Users/chandana/AI-Agents/commons-lang",
+      "target_class": "IntegerRange",
+      "metadata": {
+        "class_name": "IntegerRange",
+        "fully_qualified_name": "org.apache.commons.lang3.IntegerRange",
+        "complexity": "pojo",
+        "method_count": 3,
+        "has_dependencies": false,
+        "has_inheritance": true,
+        "uses_generics": false,
+        "framework_annotations": [],
+        "source_file": "src/main/java/org/apache/commons/lang3/IntegerRange.java",
+        "tags": [
+          "range",
+          "tier-easy"
+        ],
+        "expected_test_count": 4
+      },
+      "expectations": {
+        "should_compile": true,
+        "should_pass": true,
+        "min_test_count": 2,
+        "max_iterations": 3
+      },
+      "k_samples": 1,
+      "timeout_sec": 180
+    }
+  ]
+}

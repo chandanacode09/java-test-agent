@@ -286,6 +286,12 @@ class TemplateRenderer:
         # Replace Python None with Java null
         code = re.sub(r'\bNone\b', 'null', code)
 
+        # Replace string "null" with proper null keyword in method calls
+        # Catches: method("null") -> method(null)
+        code = re.sub(r'\("null"\)', '(null)', code)
+        code = re.sub(r', "null"\)', ', null)', code)
+        code = re.sub(r'\("null",', '(null,', code)
+
         # Replace Python True/False with Java true/false
         code = re.sub(r'\bTrue\b', 'true', code)
         code = re.sub(r'\bFalse\b', 'false', code)

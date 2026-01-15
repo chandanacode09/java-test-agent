@@ -1,0 +1,69 @@
+{
+  "run_id": "16d6ee2f",
+  "run_name": "eval-16d6ee2f",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-pettypeformatter-013",
+      "run_id": "2e7bf759",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "error",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "error",
+          "grader_outputs": [],
+          "tests_generated": 0,
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 0,
+          "fixes_applied": 0,
+          "duration_sec": 0.7657589912414551,
+          "generated_test_code": null,
+          "maven_output": null,
+          "error_log": "Traceback (most recent call last):\n  File \"/Users/chandana/AI-Agents/java-test-agent/evals/levels/l3_agent.py\", line 97, in evaluate\n    result = agent.run(case.target_class)\n  File \"/Users/chandana/AI-Agents/java-test-agent/src/java_agent.py\", line 193, in run\n    test_code = direct_gen.generate_for_class(target_class, project_context)\n  File \"/Users/chandana/AI-Agents/java-test-agent/src/generator/direct_generator.py\", line 148, in generate_for_class\n    raw_code = self._call_llm(prompt)\n  File \"/Users/chandana/AI-Agents/java-test-agent/src/generator/direct_generator.py\", line 465, in _call_llm\n    response = self._call_openrouter(prompt)\n  File \"/Users/chandana/AI-Agents/java-test-agent/src/generator/direct_generator.py\", line 519, in _call_openrouter\n    raise RuntimeError(f\"OpenRouter API error: {response.status_code} - {response.text}\")\nRuntimeError: OpenRouter API error: 401 - {\"error\":{\"message\":\"User not found.\",\"code\":401}}\n"
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 0.766653,
+      "started_at": "2026-01-12T08:47:55.674513",
+      "completed_at": "2026-01-12T08:47:56.441166",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 0,
+    "failed": 0,
+    "errors": 1,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 0.0,
+    "avg_tests_generated": 0.0,
+    "avg_tests_passed": 0.0,
+    "avg_duration_sec": 0.7657589912414551,
+    "avg_react_iterations": 0.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-12T08:47:55.674500",
+  "completed_at": "2026-01-12T08:47:56.441203",
+  "baseline_run_id": null
+}

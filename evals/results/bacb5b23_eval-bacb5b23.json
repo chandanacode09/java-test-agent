@@ -1,0 +1,93 @@
+{
+  "run_id": "bacb5b23",
+  "run_name": "eval-bacb5b23",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-namedentity-009",
+      "run_id": "ac747b8e",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "pass",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "pass",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "pass",
+              "score": 1.0,
+              "message": "Compilation successful",
+              "details": {
+                "stdout": ""
+              },
+              "duration_ms": 4093.2540893554688
+            },
+            {
+              "grader_name": "execution",
+              "result": "pass",
+              "score": 1.0,
+              "message": "All 6 tests passed",
+              "details": {
+                "tests_run": 6,
+                "tests_passed": 6,
+                "tests_failed": 0,
+                "tests_error": 0
+              },
+              "duration_ms": 4239.623069763184
+            }
+          ],
+          "tests_generated": 6,
+          "tests_passed": 6,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 2,
+          "fixes_applied": 0,
+          "duration_sec": 66.90654468536377,
+          "generated_test_code": "package org.springframework.samples.petclinic.model;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport static org.junit.jupiter.api.Assertions.assertEquals;\n\nclass NamedEntityTest {\n\n\tprivate NamedEntity instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new NamedEntity();\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getName returns the value set by setName\")\n\tvoid testGetNameReturnsSetValue() {\n\t\tNamedEntity entity = new NamedEntity();\n\t\tentity.setName(\"Fluffy\");\n\t\tvar result = entity.getName();\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getName returns null when setName has been called with null\")\n\tvoid testGetNameReturnsNullWhenNotSet() {\n\t\tNamedEntity entity = new NamedEntity();\n\t\tentity.setName(null);\n\t\tvar result = entity.getName();\n\t\tassertNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getName returns an empty string when setName is called with an empty string\")\n\tvoid testGetNameReturnsEmptyString() {\n\t\tNamedEntity entity = new NamedEntity();\n\t\tentity.setName(\"\");\n\t\tvar result = entity.getName();\n\t\tassertEquals(\"\", result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setName correctly sets the name field to a valid string\")\n\tvoid testSetNameWithValidString() {\n\t\tinstance.setName(\"Fluffy\");\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setName handles an empty string input without throwing exceptions\")\n\tvoid testSetNameWithEmptyString() {\n\t\tinstance.setName(\"\");\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that setName handles null input, setting the name field to null\")\n\tvoid testSetNameWithNull() {\n\t\tinstance.setName(null);\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 1,
+        "pass_rate": 1.0,
+        "pass_at_1": 1.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 66.911578,
+      "started_at": "2026-01-11T11:54:24.812471",
+      "completed_at": "2026-01-11T11:55:31.724049",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 1,
+    "failed": 0,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 1.0,
+    "avg_tests_generated": 6.0,
+    "avg_tests_passed": 6.0,
+    "avg_duration_sec": 66.90654468536377,
+    "avg_react_iterations": 2.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-11T11:54:24.812452",
+  "completed_at": "2026-01-11T11:55:31.724848",
+  "baseline_run_id": null
+}

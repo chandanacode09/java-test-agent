@@ -1,0 +1,101 @@
+{
+  "run_id": "c9a5c7d8",
+  "run_name": "eval-c9a5c7d8",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-vet-001",
+      "run_id": "356afb82",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "fail",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "fail",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "pass",
+              "score": 1.0,
+              "message": "Compilation successful",
+              "details": {
+                "stdout": ""
+              },
+              "duration_ms": 5211.30108833313
+            },
+            {
+              "grader_name": "execution",
+              "result": "fail",
+              "score": 0.75,
+              "message": "3/4 tests passed (0 failed, 1 errors)",
+              "details": {
+                "tests_run": 4,
+                "tests_passed": 3,
+                "tests_failed": 0,
+                "tests_error": 1,
+                "failures": [
+                  {
+                    "test": "testGetSpecialties_WithSpecialties",
+                    "class": "org.springframework.samples.petclinic.vet.VetTest",
+                    "type": "java.lang.NullPointerException",
+                    "message": "Cannot invoke \"java.lang.Comparable.compareTo(Object)\" because the return value of \"java.util.function.Function.apply(Object)\" is null"
+                  }
+                ]
+              },
+              "duration_ms": 5147.238969802856
+            }
+          ],
+          "tests_generated": 4,
+          "tests_passed": 3,
+          "tests_failed": 1,
+          "compilation_errors": 0,
+          "react_iterations": 1,
+          "fixes_applied": 0,
+          "duration_sec": 92.94992280006409,
+          "generated_test_code": "package org.springframework.samples.petclinic.vet;\n\nimport static org.junit.jupiter.api.Assertions.assertEquals;\nimport static org.junit.jupiter.api.Assertions.assertNotNull;\nimport static org.junit.jupiter.api.Assertions.assertTrue;\n\nimport java.util.List;\nimport java.util.Set;\n\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport org.junit.jupiter.api.Test;\n\npublic class VetTest {\n\n\tprivate Vet controller;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tcontroller = new Vet();\n\t}\n\n\t@Test\n\t@DisplayName(\"getSpecialtiesInternal returns empty set when no specialties added\")\n\tvoid testGetSpecialtiesInternal_Empty() {\n\t\tSet<Specialty> specialties = controller.getSpecialtiesInternal();\n\t\tassertNotNull(specialties);\n\t\tassertEquals(0, specialties.size());\n\t}\n\n\t@Test\n\t@DisplayName(\"getSpecialtiesInternal returns set with added specialties\")\n\tvoid testGetSpecialtiesInternal_WithSpecialties() {\n\t\tSpecialty specialty1 = new Specialty();\n\t\tSpecialty specialty2 = new Specialty();\n\t\tcontroller.addSpecialty(specialty1);\n\t\tcontroller.addSpecialty(specialty2);\n\t\tSet<Specialty> specialties = controller.getSpecialtiesInternal();\n\t\tassertEquals(2, specialties.size());\n\t\tassertTrue(specialties.contains(specialty1));\n\t\tassertTrue(specialties.contains(specialty2));\n\t}\n\n\t@Test\n\t@DisplayName(\"getSpecialties returns empty list when no specialties added\")\n\tvoid testGetSpecialties_Empty() {\n\t\tList<Specialty> specialties = controller.getSpecialties();\n\t\tassertNotNull(specialties);\n\t\tassertEquals(0, specialties.size());\n\t}\n\n\t@Test\n\t@DisplayName(\"getSpecialties returns list with added specialties\")\n\tvoid testGetSpecialties_WithSpecialties() {\n\t\tSpecialty specialty1 = new Specialty();\n\t\tSpecialty specialty2 = new Specialty();\n\t\tcontroller.addSpecialty(specialty1);\n\t\tcontroller.addSpecialty(specialty2);\n\t\tList<Specialty> specialties = controller.getSpecialties();\n\t\tassertEquals(2, specialties.size());\n\t\tassertTrue(specialties.contains(specialty1));\n\t\tassertTrue(specialties.contains(specialty2));\n\t}\n\n}",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 92.953914,
+      "started_at": "2026-01-12T12:33:27.843504",
+      "completed_at": "2026-01-12T12:35:00.797418",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 0,
+    "failed": 1,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 0.0,
+    "avg_tests_generated": 4.0,
+    "avg_tests_passed": 3.0,
+    "avg_duration_sec": 92.94992280006409,
+    "avg_react_iterations": 1.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-12T12:33:27.843485",
+  "completed_at": "2026-01-12T12:35:00.798201",
+  "baseline_run_id": null
+}

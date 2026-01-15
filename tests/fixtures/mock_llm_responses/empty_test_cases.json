@@ -1,0 +1,6 @@
+{
+  "test_type": "unit_class",
+  "target_name": "method",
+  "target_class": "Example",
+  "test_cases": []
+}

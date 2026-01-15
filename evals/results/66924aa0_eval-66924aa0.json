@@ -1,0 +1,93 @@
+{
+  "run_id": "66924aa0",
+  "run_name": "eval-66924aa0",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-vet-001",
+      "run_id": "d26a4e64",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "pass",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "pass",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "pass",
+              "score": 1.0,
+              "message": "Compilation successful",
+              "details": {
+                "stdout": ""
+              },
+              "duration_ms": 3592.7040576934814
+            },
+            {
+              "grader_name": "execution",
+              "result": "pass",
+              "score": 1.0,
+              "message": "All 5 tests passed",
+              "details": {
+                "tests_run": 5,
+                "tests_passed": 5,
+                "tests_failed": 0,
+                "tests_error": 0
+              },
+              "duration_ms": 4005.816698074341
+            }
+          ],
+          "tests_generated": 5,
+          "tests_passed": 5,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 2,
+          "fixes_applied": 0,
+          "duration_sec": 121.22828221321106,
+          "generated_test_code": "package org.springframework.samples.petclinic.vet;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport java.util.List;\n\nclass VetTest {\n\n\tprivate Vet instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new Vet();\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getSpecialties returns specialties sorted by name when multiple specialties are added\")\n\tvoid testGetSpecialtiesReturnsSortedList() {\n\t\tSpecialty specialty1 = new Specialty();\n\t\tspecialty1.setName(\"Dentistry\");\n\t\tinstance.addSpecialty(specialty1);\n\t\tSpecialty specialty2 = new Specialty();\n\t\tspecialty2.setName(\"Cardiology\");\n\t\tinstance.addSpecialty(specialty2);\n\t\tvar result = instance.getSpecialties();\n\t\tassertIterableEquals(List.of(\"Cardiology\", \"Dentistry\"), result.stream().map(s -> s.getName()).toList());\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getSpecialties returns an empty list when no specialties are added\")\n\tvoid testGetSpecialtiesReturnsEmptyList() {\n\t\tvar result = instance.getSpecialties();\n\t\tassertTrue(result.isEmpty());\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getSpecialties throws NullPointerException when a specialty has a null name during sorting comparison\")\n\tvoid testGetSpecialtiesWithSpecialtyHavingNullNameThrowsNPE() {\n\t\tSpecialty specialty = new Specialty();\n\t\tspecialty.setName(null);\n\t\tinstance.addSpecialty(specialty);\n\t\tassertDoesNotThrow(() -> {\n\t\t\tinstance.getSpecialties();\n\t\t});\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getSpecialties returns a single-item list when one specialty is added\")\n\tvoid testGetSpecialtiesWithSingleSpecialty() {\n\t\tSpecialty specialty = new Specialty();\n\t\tspecialty.setName(\"Radiology\");\n\t\tinstance.addSpecialty(specialty);\n\t\tvar result = instance.getSpecialties();\n\t\tassertIterableEquals(List.of(\"Radiology\"), result.stream().map(s -> s.getName()).toList());\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify that adding a null Specialty does not raise a NullPointerException\")\n\tvoid testAddSpecialtyNull() {\n\t\tassertDoesNotThrow(() -> {\n\t\t\tinstance.addSpecialty(null);\n\t\t});\n\t}\n\n}",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 1,
+        "pass_rate": 1.0,
+        "pass_at_1": 1.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 121.229393,
+      "started_at": "2026-01-10T12:45:49.294188",
+      "completed_at": "2026-01-10T12:47:50.523581",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 1,
+    "failed": 0,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 1.0,
+    "avg_tests_generated": 5.0,
+    "avg_tests_passed": 5.0,
+    "avg_duration_sec": 121.22828221321106,
+    "avg_react_iterations": 2.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-10T12:45:49.294176",
+  "completed_at": "2026-01-10T12:47:50.523647",
+  "baseline_run_id": null
+}

@@ -1,0 +1,91 @@
+{
+  "run_id": "346c64dc",
+  "run_name": "eval-346c64dc",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-pettypeformatter-013",
+      "run_id": "ec1100d6",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "fail",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "fail",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "pass",
+              "score": 1.0,
+              "message": "Compilation successful",
+              "details": {
+                "stdout": ""
+              },
+              "duration_ms": 4626.477003097534
+            },
+            {
+              "grader_name": "execution",
+              "result": "fail",
+              "score": 0.0,
+              "message": "No tests were executed",
+              "details": {
+                "stderr": "",
+                "stdout": "atching pattern \"PetTypeFormatterTest\" were executed! (Set -Dsurefire.failIfNoSpecifiedTests=false to ignore this error.) -> [Help 1]\n[ERROR] \n[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.\n[ERROR] Re-run Maven using the -X switch to enable full debug logging.\n[ERROR] \n[ERROR] For more information about the errors and possible solutions, please read the following articles:\n[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException\n"
+              },
+              "duration_ms": 4132.491111755371
+            }
+          ],
+          "tests_generated": 0,
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 1,
+          "fixes_applied": 0,
+          "duration_sec": 110.05942296981812,
+          "generated_test_code": "package org.springframework.samples.petclinic.owner;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.extension.ExtendWith;\nimport org.mockito.InjectMocks;\nimport org.mockito.Mock;\nimport org.mockito.junit.jupiter.MockitoExtension;\nimport static org.mockito.Mockito.*;\nimport static org.mockito.ArgumentMatchers.*;\nimport org.springframework.data.domain.Page;\nimport org.springframework.data.domain.PageRequest;\nimport org.springframework.data.domain.Pageable;\nimport java.util.Locale;\nimport static org.mockito.Mockito.*;\nimport java.util.List;\nimport org.springframework.format.ParseException;\nimport java.util.Locale;\nimport java.util.Collection;\n\n@ExtendWith(MockitoExtension.class)\nclass PetTypeFormatterTest {\n\n\t@Mock\n\tprivate PetTypeRepository types;\n\n\t@InjectMocks\n\tprivate PetTypeFormatter controller;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\t// Mockito initializes @Mock and @InjectMocks automatically\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that the method returns the pet type name when it is not null\")\n\tvoid testPrintReturnsNameWhenPetTypeHasName() {\n\t\tPetType petType = new PetType();\n\t\tpetType.setName(\"Dog\");\n\t\tvar result = petType.print(\"petType\", Locale.ENGLISH);\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that the method returns '<null>' when the pet type name is null\")\n\tvoid testPrintReturnsNullStringWhenNameIsNull() {\n\t\tPetType petType = new PetType();\n\t\tpetType.setName(null);\n\t\tvar result = petType.print(\"petType\", Locale.ENGLISH);\n\t\tassertEquals(\"<null>\", result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Ensures the method ignores locale and returns name correctly\")\n\tvoid testPrintWithDifferentLocale() {\n\t\tPetType petType = new PetType();\n\t\tpetType.setName(\"Cat\");\n\t\tvar result = petType.print(\"petType\", Locale.FRENCH);\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Returns the matching PetType object when the input text matches a pet type name in the collection\")\n\tvoid testParseReturnsPetTypeWhenMatchFound() {\n\t\tPetType pet = new PetType();\n\t\tpet.setName(\"Dog\");\n\t\tCollection<PetType> petTypes = List.of(pet);\n\t\twhen(types.findPetTypes()).thenReturn(petTypes);\n\t\tvar result = pet.parse(\"Dog\", Locale.ENGLISH);\n\t\tassertNotNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Throws ParseException when the input text does not match any pet type name in the collection\")\n\tvoid testParseThrowsParseExceptionWhenNotFound() {\n\t\tPetType pet = new PetType();\n\t\tpet.setName(\"Dog\");\n\t\tCollection<PetType> petTypes = List.of(pet);\n\t\twhen(types.findPetTypes()).thenReturn(petTypes);\n\t\tassertThrows(ParseException.class, () -> {\n\t\t\tpet.parse(\"Cat\", Locale.ENGLISH);\n\t\t});\n\t}\n\n\t@Test\n\t@DisplayName(\"Throws ParseException when the pet types collection is empty, regardless of input text\")\n\tvoid testParseThrowsParseExceptionForEmptyCollection() {\n\t\tCollection<PetType> petTypes = List.of();\n\t\twhen(types.findPetTypes()).thenReturn(petTypes);\n\t\tassertThrows(ParseException.class, () -> {\n\t\t\tinstance.parse(\"Dog\", Locale.ENGLISH);\n\t\t});\n\t}\n\n\t@Test\n\t@DisplayName(\"Throws ParseException when input text is null and no pet type has a null name\")\n\tvoid testParseThrowsParseExceptionForNullText() {\n\t\tPetType pet = new PetType();\n\t\tpet.setName(\"Dog\");\n\t\tCollection<PetType> petTypes = List.of(pet);\n\t\twhen(types.findPetTypes()).thenReturn(petTypes);\n\t\tassertThrows(ParseException.class, () -> {\n\t\t\tpet.parse(null, Locale.ENGLISH);\n\t\t});\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 110.06021,
+      "started_at": "2026-01-11T13:05:28.495848",
+      "completed_at": "2026-01-11T13:07:18.556058",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 0,
+    "failed": 1,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 0.0,
+    "avg_tests_generated": 0.0,
+    "avg_tests_passed": 0.0,
+    "avg_duration_sec": 110.05942296981812,
+    "avg_react_iterations": 1.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-11T13:05:28.495834",
+  "completed_at": "2026-01-11T13:07:18.556151",
+  "baseline_run_id": null
+}

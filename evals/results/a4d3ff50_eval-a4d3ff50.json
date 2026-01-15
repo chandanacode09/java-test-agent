@@ -1,0 +1,93 @@
+{
+  "run_id": "a4d3ff50",
+  "run_name": "eval-a4d3ff50",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-baseentity-008",
+      "run_id": "08f2480c",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "pass",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "pass",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "pass",
+              "score": 1.0,
+              "message": "Compilation successful",
+              "details": {
+                "stdout": ""
+              },
+              "duration_ms": 3660.240888595581
+            },
+            {
+              "grader_name": "execution",
+              "result": "pass",
+              "score": 1.0,
+              "message": "All 7 tests passed",
+              "details": {
+                "tests_run": 7,
+                "tests_passed": 7,
+                "tests_failed": 0,
+                "tests_error": 0
+              },
+              "duration_ms": 5222.047805786133
+            }
+          ],
+          "tests_generated": 7,
+          "tests_passed": 7,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 2,
+          "fixes_applied": 0,
+          "duration_sec": 94.9311158657074,
+          "generated_test_code": "package org.springframework.samples.petclinic.model;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport static org.junit.jupiter.api.Assertions.assertEquals;\nimport org.junit.jupiter.api.Test;\n\nclass BaseEntityTest {\n\n\tprivate BaseEntity instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new BaseEntity();\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getId returns the id value when set to a valid integer\")\n\tvoid testGetIdReturnsSetId() {\n\t\tinstance.setId(42);\n\t\tvar result = instance.getId();\n\t\tassertEquals(42, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getId returns null when id is set to null\")\n\tvoid testGetIdReturnsNullWhenIdIsNull() {\n\t\tinstance.setId(null);\n\t\tvar result = instance.getId();\n\t\tassertNull(result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getId returns negative integer values correctly\")\n\tvoid testGetIdReturnsNegativeId() {\n\t\tinstance.setId(-1);\n\t\tvar result = instance.getId();\n\t\tassertEquals(-1, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Sets the id with a valid positive integer\")\n\tvoid testSetIdWithValidId() {\n\t\tinstance.setId(1);\n\t}\n\n\t@Test\n\t@DisplayName(\"Sets the id with null value\")\n\tvoid testSetIdWithNull() {\n\t\tinstance.setId(null);\n\t}\n\n\t@Test\n\t@DisplayName(\"Sets the id with zero as the value\")\n\tvoid testSetIdWithZero() {\n\t\tinstance.setId(0);\n\t}\n\n\t@Test\n\t@DisplayName(\"Sets the id with a negative integer\")\n\tvoid testSetIdWithNegative() {\n\t\tinstance.setId(-1);\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 1,
+        "pass_rate": 1.0,
+        "pass_at_1": 1.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 94.934565,
+      "started_at": "2026-01-11T11:45:41.955049",
+      "completed_at": "2026-01-11T11:47:16.889614",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 1,
+    "failed": 0,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 1.0,
+    "avg_tests_generated": 7.0,
+    "avg_tests_passed": 7.0,
+    "avg_duration_sec": 94.9311158657074,
+    "avg_react_iterations": 2.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-11T11:45:41.955034",
+  "completed_at": "2026-01-11T11:47:16.891889",
+  "baseline_run_id": null
+}

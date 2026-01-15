@@ -1,0 +1,99 @@
+{
+  "run_id": "881d9b29",
+  "run_name": "eval-881d9b29",
+  "description": null,
+  "dataset_name": "petclinic",
+  "level_filter": null,
+  "model": "x-ai/grok-code-fast-1",
+  "k_samples": 1,
+  "results": [
+    {
+      "eval_case_id": "petclinic-vet-001",
+      "run_id": "331f1272",
+      "model": "x-ai/grok-code-fast-1",
+      "model_temperature": 0.0,
+      "status": "fail",
+      "sample_results": [
+        {
+          "sample_index": 0,
+          "status": "fail",
+          "grader_outputs": [
+            {
+              "grader_name": "compilation",
+              "result": "fail",
+              "score": 0.0,
+              "message": "Compilation failed with 8 errors",
+              "details": {
+                "error_count": 8,
+                "error_lines": [
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTest.java:[122,26] illegal start of expression",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTest.java:[122,34] ';' expected",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTest.java:[122,36] not a statement",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTest.java:[122,42] ';' expected",
+                  "[ERROR] /Users/chandana/AI-Agents/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTest.java:[122,26] illegal start of expression"
+                ],
+                "stderr": ""
+              },
+              "duration_ms": 4131.6070556640625
+            },
+            {
+              "grader_name": "execution",
+              "result": "fail",
+              "score": 0.0,
+              "message": "No tests were executed",
+              "details": {
+                "stderr": "",
+                "stdout": "nts/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTest.java:[122,42] ';' expected\n[ERROR] -> [Help 1]\n[ERROR] \n[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.\n[ERROR] Re-run Maven using the -X switch to enable full debug logging.\n[ERROR] \n[ERROR] For more information about the errors and possible solutions, please read the following articles:\n[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException\n"
+              },
+              "duration_ms": 3851.585865020752
+            }
+          ],
+          "tests_generated": 0,
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "compilation_errors": 0,
+          "react_iterations": 0,
+          "fixes_applied": 0,
+          "duration_sec": 94.74102592468262,
+          "generated_test_code": "package org.springframework.samples.petclinic.vet;\n\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.DisplayName;\nimport java.time.LocalDate;\nimport static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport static org.junit.jupiter.api.Assertions.*;\nimport java.util.HashSet;\nimport java.util.Set;\n\nclass VetTest {\n\n\tprivate Vet instance;\n\n\t@BeforeEach\n\tvoid setUp() {\n\t\tinstance = new Vet();\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that getSpecialties throws NullPointerException if a specialty has a null name during sorting\")\n\tvoid testGetSpecialtiesHandlesNullNameThrowsException() {\n\t\tassertThrows(NullPointerException.class, () -> {\n\t\t\tinstance.getSpecialties();\n\t\t});\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify that getNrOfSpecialties returns the correct number of specialties when specialties have been added to the Vet object. Setup: Create Vet object, add two Specialty objects using addSpecialty() (each with setName) on the Vet, then call getNrOfSpecialties() and check the returned int value.\")\n\tvoid testGetNrOfSpecialtiesReturnsCorrectCountWhenSpecialtiesPresent() {\n\t\tvar result = instance.getNrOfSpecialties();\n\t\tassertEquals(2, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify that getNrOfSpecialties returns 0 when no specialties have been added to the Vet object. Setup: Create Vet object without calling addSpecialty(), then call getNrOfSpecialties() and check the returned int value.\")\n\tvoid testGetNrOfSpecialtiesReturnsZeroWhenNoSpecialties() {\n\t\tvar result = instance.getNrOfSpecialties();\n\t\tassertEquals(0, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify that getNrOfSpecialties returns the correct count after multiple addSpecialty() calls. Setup: Create Vet object, add three Specialty objects using addSpecialty() (each with setName), then call getNrOfSpecialties() and check the returned int value.\")\n\tvoid testGetNrOfSpecialtiesHandlesMultipleAdditions() {\n\t\tvar result = instance.getNrOfSpecialties();\n\t\tassertEquals(3, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verify that getNrOfSpecialties returns 1 when exactly one specialty has been added. Setup: Create Vet object, add one Specialty object using addSpecialty() (with setName), then call getNrOfSpecialties() and check the returned int value.\")\n\tvoid testGetNrOfSpecialtiesBoundarySingleSpecialty() {\n\t\tvar result = instance.getNrOfSpecialties();\n\t\tassertEquals(1, result);\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that adding a valid Specialty object to a Vet does not throw an exception and presumably adds it to the internal list\")\n\tvoid testAddSpecialtyAddsValidSpecialty() {\n\t\tinstance.addSpecialty(new Vet());\n\t}\n\n\t@Test\n\t@DisplayName(\"Verifies that adding a null Specialty throws NullPointerException when asserting against the add operation\")\n\tvoid testAddSpecialtyHandlesNullSpecialty() {\n\t\tassertThrows(NullPointerException.class, () -> {\n\t\t\tinstance.addSpecialty(new Vet());\n\t\t});\n\t}\n\n}\n",
+          "maven_output": null,
+          "error_log": null
+        }
+      ],
+      "pass_at_k": {
+        "k": 1,
+        "n_pass": 0,
+        "pass_rate": 0.0,
+        "pass_at_1": 0.0,
+        "pass_at_5": null,
+        "pass_at_10": null
+      },
+      "total_duration_sec": 94.744456,
+      "started_at": "2026-01-10T15:06:58.387659",
+      "completed_at": "2026-01-10T15:08:33.132115",
+      "error_message": null,
+      "error_traceback": null,
+      "python_version": null,
+      "java_version": null,
+      "maven_version": null
+    }
+  ],
+  "summary": {
+    "total_cases": 1,
+    "passed": 0,
+    "failed": 1,
+    "errors": 0,
+    "timeouts": 0,
+    "skipped": 0,
+    "overall_pass_rate": 0.0,
+    "avg_tests_generated": 0.0,
+    "avg_tests_passed": 0.0,
+    "avg_duration_sec": 94.74102592468262,
+    "avg_react_iterations": 0.0,
+    "by_complexity": {},
+    "by_level": {}
+  },
+  "started_at": "2026-01-10T15:06:58.387647",
+  "completed_at": "2026-01-10T15:08:33.132760",
+  "baseline_run_id": null
+}
